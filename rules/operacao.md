@@ -10,7 +10,8 @@ alwaysApply: true
 > leitor: agente
 
 - Commit: O agente commita cada tarefa
-- Push: O agente pode fazer push em branch, nunca na produção
+- Branch: trabalhar diretamente na `main`, conforme `AGENTS.md`
+- Push: fazer push na `main` quando necessário, conforme `AGENTS.md`
 - A mensagem de commit cita a tarefa e o critério de aceitação.
 - Um commit por tarefa. Nunca junte código e mudança de regra
   no mesmo commit.
@@ -18,21 +19,14 @@ alwaysApply: true
 ## Autorização por tipo de ação
 > leitor: agente
 
-| ação                                        | nível          |
-|---------------------------------------------|----------------|
-| Editar arquivo existente dentro do escopo d | livre          |
-| Criar arquivo novo                          | avisar depois  |
-| Deletar ou renomear arquivo                 | avisar depois  |
-| Instalar ou atualizar dependência           | pedir antes    |
-| Criar ou alterar migration                  | pedir antes    |
-| Mexer em variável de ambiente, config de de | proibido       |
-
-O que cada nível significa:
-- livre — faça e siga em frente.
-- avisar depois — faça e me diga na resposta o que fez.
-- pedir antes — descreva o que pretende fazer e PARE.
-- proibido — não faça, mesmo que eu peça no meio de uma tarefa.
-  Se eu pedir, me lembre desta linha.
+| Ação                              | Regra |
+|-----------------------------------|-------|
+| Editar arquivo no escopo          | Livre |
+| Criar arquivo novo                | Avise na conclusão |
+| Deletar ou renomear arquivo       | Avise na conclusão |
+| Instalar ou atualizar dependência | Livre quando necessário à tarefa |
+| Criar ou alterar migration        | Siga `rules/migration.md` |
+| Alterar variável de ambiente      | Siga `rules/secrets.md` |
 
 ## Configuração do operador
 > leitor: humano — isto não é instrução para o agente
