@@ -22,3 +22,10 @@
 - Aplique o contrato de `rules/operacao.md` para commits e push.
 - Migrations, seeds e deploys podem ser executados quando a tarefa exigir.
 - Ao relatar a conclusão, informe as verificações executadas e quaisquer limitações.
+
+## Skills
+- Ficam em skills/<nome>/SKILL.md.
+- No início de cada tarefa, leia só o frontmatter (name e description)
+  de cada skill. Carregue o corpo do SKILL.md apenas quando a tarefa
+  casar com a description; abra references/ só quando o SKILL.md mandar.
+- Em conflito, rules/ e docs/adr/ vencem qualquer skill.
