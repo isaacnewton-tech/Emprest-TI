@@ -11,6 +11,7 @@ Plano aprovado pelo usuário em 05/11/2026 para a entrega 3. A implementação s
 - O tenant inicial é `suporte_ti`, conforme ADR-001.
 - O professor, `marcelo.grilo@institutojef.org.br`, terá perfil Colaborador nesse tenant e começará com zero empréstimos.
 - A conta `isaacmaifrinodias@gmail.com` será usada nos testes manuais. Sua senha não pertence à spec, ao seed, ao Git ou aos testes automatizados.
+- O usuário confirmou que a conta de testes também será Colaborador em `suporte_ti`.
 - Ao repetir o seed, preservar equipamentos que já tenham sido usados em empréstimos e atualizar apenas os que ainda não foram utilizados. Não remover histórico nem resetar banco.
 - A prática exige a senha padrão da turma para o professor, mas proíbe segredos em código e Git. O usuário informa a senha somente durante o provisionamento manual no Supabase Auth; ela não é escrita no arquivo de seed.
 - Migrations, provisionamento de contas, upload e seed do deploy são executados pelo usuário. O agente prepara e verifica a implementação somente no ambiente local.
@@ -24,6 +25,8 @@ As fotos vêm exclusivamente do pacote completo e validado pela skill. O procedi
 Para equipamentos ainda não utilizados, repetir o seed sincroniza os dados da lista e do manifesto. Para equipamentos já utilizados, preserva todos os campos existentes e relata a preservação por patrimônio. Não altera empréstimos, datas ou histórico; uma execução repetida não devolve um item emprestado ao estado disponível.
 
 O usuário provisiona a conta do professor no Supabase Auth e informa seu ID ao comando de seed. O seed cria o vínculo desse ID com `suporte_ti` no papel Colaborador. Não armazena senha em tabela de domínio, não cria login alternativo e não concede permissão de Operações. O procedimento humano confere se o ID informado corresponde ao e-mail do professor e valida o login real após o deploy. Repetir o seed não troca a senha da conta.
+
+O comando também recebe o ID da conta de testes e cria sua membership Colaborador no mesmo tenant. Os IDs do professor e da conta de testes precisam ser distintos. O usuário confere ambos no Auth; o seed não troca senhas nem cria empréstimos para nenhuma das contas.
 
 As novas tabelas têm RLS e política explícita na mesma migration. Um usuário sem vínculo não acessa os registros; o mesmo equipamento consultado por identidade de outro tenant não retorna. O seed administrativo não vira uma API pública para contornar essa proteção.
 

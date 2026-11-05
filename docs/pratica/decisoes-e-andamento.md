@@ -23,6 +23,10 @@ O usuário determinou que os requisitos da prática prevaleçam nos conflitos co
 | Conta do professor | Colaborador no tenant `suporte_ti`. | Resposta do usuário em 05/11/2026. |
 | Conta de teste manual | `isaacmaifrinodias@gmail.com`; preservar a conta do professor com zero empréstimos. | Resposta do usuário em 05/11/2026. |
 | Repetição do seed | Preservar equipamentos já usados em empréstimos; sincronizar apenas os nunca utilizados. | Resposta do usuário em 05/11/2026. |
+| Papel da conta de testes | `isaacmaifrinodias@gmail.com` também será Colaborador em `suporte_ti`. | Resposta do usuário em 05/11/2026. |
+| Recortes | Permitir recortes geométricos que mantenham o equipamento reconhecível; sem gerar ou retocar conteúdo. Revisar novamente o JPEG final 800×600, com hash e variante próprios. | Autorização explícita do usuário em 05/11/2026. |
+| Calendário | Contar segunda a sexta, excluindo feriados nacionais, estaduais de São Paulo e municipais da capital. Dia da solicitação fica fora da contagem; vencimento às 23h59 do 14º dia útil, no fuso de São Paulo. | Respostas explícitas do usuário em 05/11/2026. |
+| Ordem | Após fechar o login, retomar e finalizar a entrega 2 antes de iniciar a entrega 4. | Última orientação do usuário em 05/11/2026. |
 
 ## Entrega 1 — verificador
 
@@ -47,7 +51,6 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 
 ## Lacunas a resolver na etapa correspondente
 
-- Definir o calendário dos 14 dias úteis: finais de semana, feriados e fuso horário.
 - Completar a seleção das sete fotos ainda sem aprovação, mantendo a fonte e os critérios da prática.
 
 ## Estado das demais entregas
@@ -56,7 +59,7 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 - Entrega 3: spec, plano e tarefas em `docs/specs/005-dados-iniciais/`; plano aprovado, implementação pendente.
 - Entrega 4: spec de solicitar empréstimo ainda não elaborada.
 - Entrega 5: ENTREGA.md deve refletir decisões e evidências reais, sem preencher resultados futuros.
-- Pré-requisito adicional: o plano de login em `docs/specs/002-login-supabase/` foi aprovado, mas ainda não tem código implementado.
+- Pré-requisito adicional: login implementado e PRONTO na revisão `89f6c0f898e44cf617218fb2d385341efc565920`, com 45 testes, 13 E2E, lint, build e auditoria independente. A validação da conta real no deploy continua humana; nenhuma conta remota foi usada nos testes automatizados.
 
 ## Limitações e pendências técnicas
 
@@ -65,3 +68,4 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 - O pacote de fontes traz lockfile e binários somente por hash. CAs que dependam de inspecioná-los precisam de evidência adicional; não devem ser aprovados apenas pelo hash.
 - `npm audit`, após instalar as ferramentas de teste, apontou 12 alertas nas dependências existentes: 9 moderados, 2 altos e 1 crítico. O relatório inclui Next.js, Zod, sharp transitivo e a cadeia de lint. Não foi executado `npm audit fix --force`. A atualização deve ser tratada antes da publicação final; esta etapa não corrigiu esses alertas.
 - A instalação explícita de sharp para a entrega 2 atualizou essa dependência e o instalador passou a informar 11 alertas: 9 moderados, 1 alto e 1 crítico. As demais atualizações continuam pendentes.
+- Na T05 do login foram atualizados Next.js e eslint-config-next para 16.4.5, Zod para 4.6.7 e fast-uri transitivo. A auditoria de produção ficou com zero alertas; restam oito moderados no conjunto de desenvolvimento. Os números anteriores registram o histórico das rodadas, não o estado atual.
