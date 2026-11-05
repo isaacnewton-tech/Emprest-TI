@@ -1,11 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { createContext } from "@/server/api/context";
+import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { testAuthContext } from "../helpers/auth-context";
 import { publicProcedure, router } from "@/server/api/trpc";
 import { getAuthConfig } from "@/server/env";
 import { loginSchema } from "@/shared/auth";
 
 const testRouter = router({ check: publicProcedure.input(loginSchema).mutation(({ input }) => ({ email: input.email })) });
+const createContext = ({ req, resHeaders }: Pick<FetchCreateContextFnOptions, "req" | "resHeaders">) => testAuthContext({ request: req, responseHeaders: resHeaders });
 function request(origin: string | null, input: unknown) {
   return new Request("http://localhost/api/trpc/check", { method: "POST", headers: { "content-type": "application/json", ...(origin === null ? {} : { origin }) }, body: JSON.stringify({ json: input }) });
 }

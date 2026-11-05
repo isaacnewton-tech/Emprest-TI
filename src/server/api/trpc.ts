@@ -24,3 +24,8 @@ export const publicProcedure = t.procedure.use(({ ctx, type, next }) => {
   if (type === "mutation" && !hasSameOrigin(ctx.request)) throw new TRPCError({ code: "FORBIDDEN", message: "Origem da requisição não permitida." });
   return next();
 });
+
+export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
+  if (!ctx.user) throw new TRPCError({ code: "UNAUTHORIZED", message: "Entre na sua conta para continuar." });
+  return next({ ctx: { ...ctx, user: ctx.user } });
+});
