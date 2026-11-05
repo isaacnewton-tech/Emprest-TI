@@ -8,6 +8,8 @@ Executar após aprovação de `plan.md`, uma tarefa por vez.
 | T02 | Implementar service de autenticação e router `auth`, com cookies protegidos, identidade verificada e testes via `createCaller`. | CA-01, CA-02, CA-05, CA-07 | Concluído; 34 testes, 7 E2E, lint, tipos e build passaram |
 | T03 | Implementar renovação e guardas de sessão com testes de sessão ausente, inválida, expirada e renovada. | CA-03, CA-04 | Concluído; 39 testes, 7 E2E, lint, tipos e build passaram |
 | T04 | Conectar o formulário e a área autenticada mínima, com saída, redirecionamentos e testes de estados acessíveis. | CA-01, CA-03, CA-05, CA-06 | Concluído; 42 testes, 7 E2E, lint, tipos, build e inspeção visual passaram |
-| T05 | Executar os testes do fluxo e os checks, revisar exposição de segredos e obter o veredito do subagente verificador. | CA-01 a CA-07 | Em verificação final; testes de navegador implementados, auditoria pendente |
+| T05 | Executar os testes do fluxo e os checks, revisar exposição de segredos e obter o veredito do subagente verificador. | CA-01 a CA-07 | Concluído para 89f6c0f; 45 testes, 13 E2E, lint, build e veredito PRONTA |
 
 Não atribuir tenant ou papel automaticamente a uma conta autenticada. Não implementar acesso ao catálogo de equipamentos nesta spec.
+
+Relatório: `docs/verificacoes/002-login-supabase/2026-11-05T21-13-57.411Z-89f6c0f8.md`. A validação com conta real no deploy não foi executada pelo agente e continua sendo uma conferência humana.
