@@ -5,6 +5,7 @@ import { testAuthContext } from "../helpers/auth-context";
 import { publicProcedure, router } from "@/server/api/trpc";
 import { getAuthConfig } from "@/server/env";
 import { loginSchema } from "@/shared/auth";
+import { hasSameOrigin, requestOrigin } from "@/server/http/origin";
 
 const testRouter = router({ check: publicProcedure.input(loginSchema).mutation(({ input }) => ({ email: input.email })) });
 const createContext = ({ req, resHeaders }: Pick<FetchCreateContextFnOptions, "req" | "resHeaders">) => testAuthContext({ request: req, responseHeaders: resHeaders });
@@ -16,6 +17,16 @@ function endpoint(req: Request) {
 }
 
 describe("Transporte da autenticação", () => {
+  it("test_ca_07_usa_host_publico_com_protocolo_encaminhado_e_recusa_origem_falsa", () => {
+    const headers = { host: "publico.example.test", "x-forwarded-proto": "https", origin: "https://publico.example.test" };
+    const req = new Request("http://localhost:3000/api/trpc", { headers });
+    expect(requestOrigin(req)).toBe("https://publico.example.test");
+    expect(hasSameOrigin(req)).toBe(true);
+    expect(hasSameOrigin(new Request(req.url, { headers: { ...headers, origin: "https://outro.example.test", "x-forwarded-host": "outro.example.test" } }))).toBe(false);
+    expect(hasSameOrigin(new Request(req.url, { headers: { ...headers, origin: "https://usuario@publico.example.test" } }))).toBe(false);
+    expect(hasSameOrigin(new Request(req.url, { headers: { ...headers, host: "publico.example.test/caminho" } }))).toBe(false);
+    expect(hasSameOrigin(new Request(req.url, { headers: { ...headers, "x-forwarded-proto": "https,http" } }))).toBe(false);
+  });
   it("test_ca_02_ca_07_createcaller_valida_entrada_e_rejeita_tenant_ou_papel_no_input", async () => {
     const req = request("http://localhost", {});
     const caller = testRouter.createCaller(createContext({ req, resHeaders: new Headers() }));

@@ -14,7 +14,7 @@ export function testAuthContext(overrides: Partial<TRPCContext> & { user?: Await
   const { user, ...context } = overrides;
   return {
     request: new Request("http://localhost/api/trpc", { method: "POST", headers: { origin: "http://localhost" } }),
-    responseHeaders: new Headers(), requestId: "fixture-request", auth: testAuthGateway(), getIdentity: async () => user ?? null, clearSessionCookies() {},
+    responseHeaders: new Headers(), requestId: "00000000-0000-4000-8000-000000000000", auth: testAuthGateway(), getIdentity: async () => user ?? null, clearSessionCookies() {},
     ...context,
   };
 }

@@ -4,7 +4,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { existsSync, mkdtempSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { codexArguments, formatReport, isSecretPath, parseArguments, resolveVisualEvidence, safeEnvironment, saveReport, validateChecks } from "../../scripts/verificar-spec.mjs";
+import { codexArguments, formatReport, isSecretPath, parseArguments, requiredSourceFiles, resolveVisualEvidence, safeEnvironment, saveReport, selectSourceFiles, sourcePacket, validateChecks } from "../../scripts/verificar-spec.mjs";
 
 const checks = {
   revision: "a".repeat(40),
@@ -80,6 +80,29 @@ describe("Acionamento do verificador", () => {
     const file = saveReport(root, "docs/specs/003-verificador-spec/spec.md", report, { base: "b".repeat(40), revision: checks.revision, checksText: JSON.stringify(checks) });
     expect(readFileSync(file, "utf8")).toBe(evidence);
     expect(path.relative(root, file).replaceAll("\\", "/")).toMatch(/^docs\/verificacoes\/003-verificador-spec\//);
+  });
+
+  it("test_ca_02_ca_03_escopo_explicito_nao_omite_codigo_regras_spec_ou_alteracoes", () => {
+    const spec = "docs/specs/002-login/spec.md";
+    const files = ["AGENTS.md", "rules/tests.md", "src/auth.ts", "tests/auth.test.ts", spec, "docs/specs/001-antiga/spec.md", "docs/verificacoes/antiga.md", "docs/verificacoes/nova.md"];
+    const required = requiredSourceFiles(files, spec, ["docs/verificacoes/nova.md"]);
+    expect(required).toEqual(["AGENTS.md", "rules/tests.md", "src/auth.ts", "tests/auth.test.ts", spec, "docs/verificacoes/nova.md"]);
+    expect(selectSourceFiles(files, required, required)).toEqual(required);
+    expect(selectSourceFiles(files, undefined, required)).toEqual(files);
+    expect(() => selectSourceFiles(files, required.filter((file) => file !== "src/auth.ts"), required)).toThrow("omite");
+    expect(() => selectSourceFiles(files, [...required, ".env.local"], required)).toThrow("versionados");
+    expect(() => selectSourceFiles(files, [...required, required[0]], required)).toThrow("únicos");
+  });
+
+  it("test_ca_03_pacote_delimita_documento_nao_selecionado_sem_truncar_fontes", () => {
+    const root = mkdtempSync(path.join(tmpdir(), "empresti-escopo-teste-"));
+    writeFileSync(path.join(root, "codigo.ts"), "export const inteiro = 42;\n");
+    writeFileSync(path.join(root, "historico.md"), "TEXTO_FORA_DO_ESCOPO");
+    const packet = sourcePacket(root, ["codigo.ts", "historico.md"], ["codigo.ts"]);
+    expect(packet).toContain("1: export const inteiro = 42;");
+    expect(packet).toContain("historico.md: 20 bytes; sha256=");
+    expect(packet).toContain("fora do escopo textual");
+    expect(packet).not.toContain("TEXTO_FORA_DO_ESCOPO");
   });
 
   it("test_ca_02_ca_04_sandbox_real_bloqueia_escrita_sem_corrigir_fontes", () => {

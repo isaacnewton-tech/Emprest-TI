@@ -1,12 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import type { TRPCContext } from "./context";
-
-export function hasSameOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  if (!origin || request.headers.get("sec-fetch-site") === "cross-site") return false;
-  try { return new URL(origin).origin === new URL(request.url).origin; } catch { return false; }
-}
+import { hasSameOrigin, requestOrigin } from "@/server/http/origin";
 
 const t = initTRPC.context<TRPCContext>().create({
   transformer: superjson,
@@ -21,7 +16,14 @@ const t = initTRPC.context<TRPCContext>().create({
 
 export const router = t.router;
 export const publicProcedure = t.procedure.use(({ ctx, type, next }) => {
-  if (type === "mutation" && !hasSameOrigin(ctx.request)) throw new TRPCError({ code: "FORBIDDEN", message: "Origem da requisição não permitida." });
+  if (type === "mutation" && !hasSameOrigin(ctx.request)) {
+    let origin: string | null = null;
+    let expected: string | null = null;
+    try { origin = new URL(ctx.request.headers.get("origin") ?? "").origin; } catch { /* Não registrar cabeçalho inválido. */ }
+    try { expected = requestOrigin(ctx.request); } catch { /* Host inválido não é copiado para o log. */ }
+    console.warn(JSON.stringify({ event: "auth_origin_rejected", request_id: ctx.requestId, tenant_id: null, expected_origin: expected, received_origin: origin }));
+    throw new TRPCError({ code: "FORBIDDEN", message: "Origem da requisição não permitida." });
+  }
   return next();
 });
 

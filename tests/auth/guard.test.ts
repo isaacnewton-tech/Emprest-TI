@@ -88,7 +88,7 @@ describe("Guardas e renovação de sessão", () => {
     unavailable = true;
     const response = await guardSession(new NextRequest("https://app.example.test/catalogo", { headers: { cookie } }));
     expect(response.status).toBe(503);
-    expect(await response.text()).toBe("Não foi possível verificar sua sessão agora. Tente novamente.");
+    expect(response.headers.get("x-middleware-rewrite")).toBe("https://app.example.test/sessao-indisponivel");
     expect(response.headers.get("x-middleware-next")).toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-import { createHmac } from "node:crypto";
+import { createHmac, randomUUID } from "node:crypto";
 
 export const fixtureEmail = "colaborador@example.test";
 export const fixturePassword = "Senha-local-da-fixture-42";
@@ -8,7 +8,7 @@ export function fixtureUser() {
 }
 export function fixtureSession(expiresAt = Math.floor(Date.now() / 1000) + 3600) {
   const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
-  const payload = Buffer.from(JSON.stringify({ sub: fixtureUserId, exp: expiresAt, iat: Math.floor(Date.now() / 1000), aud: "authenticated", role: "authenticated", email: fixtureEmail })).toString("base64url");
+  const payload = Buffer.from(JSON.stringify({ sub: fixtureUserId, exp: expiresAt, iat: Math.floor(Date.now() / 1000), jti: randomUUID(), aud: "authenticated", role: "authenticated", email: fixtureEmail })).toString("base64url");
   const unsigned = `${header}.${payload}`;
   const token = `${unsigned}.${createHmac("sha256", "chave-ficticia-apenas-para-testes").update(unsigned).digest("base64url")}`;
   return { access_token: token, refresh_token: "refresh-ficticio-local", expires_at: expiresAt, expires_in: Math.max(1, expiresAt - Math.floor(Date.now() / 1000)), token_type: "bearer", user: fixtureUser() };

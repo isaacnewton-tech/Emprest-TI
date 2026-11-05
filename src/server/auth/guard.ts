@@ -2,6 +2,7 @@ import "server-only";
 import { NextResponse, type NextRequest } from "next/server";
 import { getAuthConfig } from "@/server/env";
 import { currentIdentity } from "@/server/services/auth";
+import { requestOrigin } from "@/server/http/origin";
 import { createAuthClient } from "./client";
 import { expireAuthCookies, isAuthCookie, noSessionCache, type CookieAdapter } from "./cookies";
 
@@ -15,7 +16,7 @@ export async function guardSession(request: NextRequest) {
     noSessionCache(target.headers);
     return target;
   }
-  const redirect = (path: string) => withCookies(NextResponse.redirect(new URL(path, request.url)));
+  const redirect = (path: string) => withCookies(NextResponse.redirect(new URL(path, requestOrigin(request))));
   if (!request.cookies.getAll().some((cookie) => isAuthCookie(cookie.name))) return protectedRoute ? redirect("/login") : response;
 
   const cookies: CookieAdapter = {
@@ -41,7 +42,7 @@ export async function guardSession(request: NextRequest) {
     }
     return loginRoute ? redirect("/catalogo") : response;
   } catch {
-    if (protectedRoute) return withCookies(new NextResponse("Não foi possível verificar sua sessão agora. Tente novamente.", { status: 503 }));
+    if (protectedRoute) return withCookies(NextResponse.rewrite(new URL("/sessao-indisponivel", requestOrigin(request)), { status: 503 }));
     return response;
   }
 }

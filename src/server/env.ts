@@ -15,3 +15,6 @@ export function getAuthConfig(environment: Record<string, string | undefined> = 
     secureCookies: environment.NODE_ENV === "production",
   };
 }
+
+// Falhar ao carregar o servidor se a configuração obrigatória estiver ausente.
+getAuthConfig();
