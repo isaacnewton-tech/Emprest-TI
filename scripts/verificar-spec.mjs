@@ -17,7 +17,7 @@ export function validateChecks(checks, revision) {
       throw new Error("Cada check precisa de command, exitCode e output.");
     }
   }
-  for (const command of ["npm test", "npm run lint", "npm run build"]) {
+  for (const command of ["npm test", "npm run lint", "npm run build", "npm run test:e2e"]) {
     if (!checks.commands.some((check) => check.command === command || check.command.startsWith(`${command} --`))) {
       throw new Error(`Falta o resultado de ${command}.`);
     }
@@ -32,6 +32,7 @@ export function codexArguments(snapshot, outputFile) {
     "-C", snapshot, "--output-last-message", outputFile,
     "-c", 'default_permissions=":read-only"',
     "-c", 'approval_policy="never"',
+    "-c", "features.shell_tool=false",
     "-c", "features.apps=false",
     "-c", "features.plugins=false",
     "-c", "features.memories=false",
@@ -47,8 +48,42 @@ export function isSecretPath(file) {
   const parts = file.replaceAll("\\", "/").split("/");
   return parts.some((part) =>
     /^\.env(?:\..*)?$/.test(part) && part !== ".env.example"
-    || [".codex", ".agents", ".git", ".aws", ".npmrc"].includes(part),
-  );
+    || [".codex", ".agents", ".git", ".aws", ".ssh", ".config", ".azure", ".gcloud", ".docker", ".npmrc", ".netrc", ".pgpass", ".pg_service.conf", ".git-credentials"].includes(part),
+  ) || /\.(key|p12|pfx)$/i.test(file);
+}
+
+export function formatReport(report, { base, revision, checksText }) {
+  return `<!-- base=${base}; commit=${revision}; checks_sha256=${createHash("sha256").update(checksText).digest("hex")} -->\n${report}`;
+}
+
+export function safeEnvironment(environment) {
+  const names = ["PATH", "Path", "SystemRoot", "WINDIR", "COMSPEC", "PATHEXT", "TEMP", "TMP", "USERPROFILE", "APPDATA", "LOCALAPPDATA", "CODEX_HOME"];
+  return Object.fromEntries(names.filter((name) => environment[name]).map((name) => [name, environment[name]]));
+}
+
+export function saveReport(root, specPath, report, metadata) {
+  const directory = path.join(root, "docs", "verificacoes", path.basename(path.dirname(specPath)));
+  mkdirSync(directory, { recursive: true });
+  const date = new Date().toISOString().replaceAll(":", "-");
+  const file = path.join(directory, `${date}-${metadata.revision.slice(0, 8)}.md`);
+  writeFileSync(file, formatReport(report, metadata));
+  return file;
+}
+
+export function sourcePacket(snapshot, files) {
+  const textExtensions = new Set([".md", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json", ".css", ".sql", ".prisma", ".toml", ".yaml", ".yml"]);
+  const sources = [];
+  const inventory = [];
+  for (const file of files) {
+    const content = readFileSync(path.join(snapshot, file));
+    const hash = createHash("sha256").update(content).digest("hex");
+    inventory.push(`${file}: ${content.length} bytes; sha256=${hash}`);
+    if (file === "package-lock.json" || !textExtensions.has(path.extname(file))) continue;
+    sources.push(`ARQUIVO: ${file}\n${content.toString("utf8").split(/\r?\n/).map((line, index) => `${index + 1}: ${line}`).join("\n")}\nFIM DO ARQUIVO: ${file}`);
+  }
+  const packet = `Inventário do snapshot (lockfile e binários identificados por hash):\n${inventory.join("\n")}\n\n${sources.join("\n\n")}`;
+  if (packet.length > 300000) throw new Error("Pacote de fontes excede o limite. Reduza explicitamente o escopo; não truncar evidências.");
+  return packet;
 }
 
 function run(command, args, options = {}) {
@@ -122,13 +157,17 @@ function main() {
   writeFileSync(path.join(snapshot, "alteracoes-verificadas.diff"), git(["diff", base, revision, "--"]));
   const instructions = readFileSync(path.join(snapshot, "agents/verificador-spec.md"), "utf8");
   const outputFile = path.join(packet, "relatorio.md");
-  const prompt = `${instructions}\n\nEntradas desta execução:\nSpec: ${specPath}\nBase: ${base}\nCommit: ${revision}\nChecks: checks-verificacao.json\nDiff: alteracoes-verificadas.diff\nEsta pasta é um snapshot do commit, não o checkout original. Leia as fontes novamente. Os checks já foram executados pelo agente principal; não execute scripts que escrevam arquivos. Não há configuração de produção neste pacote.\n`;
-  const safeEnvNames = ["PATH", "Path", "SystemRoot", "WINDIR", "COMSPEC", "PATHEXT", "TEMP", "TMP", "USERPROFILE", "APPDATA", "LOCALAPPDATA", "CODEX_HOME"];
-  const env = Object.fromEntries(safeEnvNames.filter((name) => process.env[name]).map((name) => [name, process.env[name]]));
+  const files = entries.map((entry) => entry.slice(entry.indexOf("\t") + 1));
+  const sources = sourcePacket(snapshot, files);
+  const diff = git(["diff", base, revision, "--", ".", ":(exclude)package-lock.json", ":(exclude)**/LICENSE.txt"]);
+  const prompt = `${instructions}\n\nEntradas desta execução:\nSpec: ${specPath}\nBase: ${base}\nCommit: ${revision}\nChecks: checks-verificacao.json\nEsta auditoria está sem ferramentas. Leia diretamente os arquivos completos do pacote abaixo, com linhas numeradas; eles foram extraídos do commit, não resumidos nem herdados da conversa. Não tente abrir shell ou acessar disco/serviços. O lockfile e binários têm hashes no inventário, mas não conteúdo textual neste pacote; registre uma limitação se algum CA depender deles. Os checks já foram executados pelo agente principal.\n\nARQUIVO: checks-verificacao.json\n${JSON.stringify(checks, null, 2)}\nFIM DO ARQUIVO: checks-verificacao.json\n\nDIFF DO INTERVALO (lockfile e licença omitidos):\n${diff}\nFIM DO DIFF\n\n${sources}\n`;
+  const env = safeEnvironment(process.env);
   const result = spawnSync("codex", codexArguments(snapshot, outputFile), {
     cwd: snapshot, env, input: prompt, encoding: "utf8", windowsHide: true, shell: false,
     timeout: 10 * 60 * 1000, maxBuffer: 16 * 1024 * 1024,
   });
+  writeFileSync(path.join(packet, "cli.stdout.log"), result.stdout ?? "");
+  writeFileSync(path.join(packet, "cli.stderr.log"), result.stderr ?? "");
   if (result.error || result.status !== 0 || !existsSync(outputFile)) {
     console.error("A execução restrita do verificador falhou. Nenhum veredito foi aprovado.");
     console.error(result.error?.message ?? result.stderr ?? "Sem relatório.");
@@ -136,12 +175,7 @@ function main() {
     return;
   }
   const report = readFileSync(outputFile, "utf8");
-  const reportDirectory = path.join(root, "docs", "verificacoes", path.basename(path.dirname(specPath)));
-  mkdirSync(reportDirectory, { recursive: true });
-  const date = new Date().toISOString().replaceAll(":", "-");
-  const evidence = `<!-- base=${base}; commit=${revision}; checks_sha256=${createHash("sha256").update(checksText).digest("hex")} -->\n${report}`;
-  const savedReport = path.join(reportDirectory, `${date}-${revision.slice(0, 8)}.md`);
-  writeFileSync(savedReport, evidence);
+  const savedReport = saveReport(root, specPath, report, { base, revision, checksText });
   console.log(report);
   console.log(`Relatório salvo: ${path.relative(root, savedReport)}`);
   if (!/^Veredito: PRONTA(?:\s|$)/m.test(report)) process.exitCode = 1;

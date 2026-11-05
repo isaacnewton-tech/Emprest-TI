@@ -1,9 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { codexArguments, isSecretPath, parseArguments, validateChecks } from "../../scripts/verificar-spec.mjs";
+import { spawnSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
+import { existsSync, mkdtempSync, readFileSync, unlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { codexArguments, formatReport, isSecretPath, parseArguments, safeEnvironment, saveReport, validateChecks } from "../../scripts/verificar-spec.mjs";
 
 const checks = {
   revision: "a".repeat(40),
-  commands: ["npm test", "npm run lint", "npm run build -- --webpack"].map((command) => ({ command, exitCode: 0, output: "passou" })),
+  commands: ["npm test", "npm run lint", "npm run build -- --webpack", "npm run test:e2e"].map((command) => ({ command, exitCode: 0, output: "passou" })),
 };
 
 describe("Acionamento do verificador", () => {
@@ -21,7 +26,7 @@ describe("Acionamento do verificador", () => {
 
   it("test_ca_02_desabilita_escrita_escalacao_apps_plugins_e_busca", () => {
     const args = codexArguments("snapshot", "relatorio.md");
-    for (const setting of ['default_permissions=":read-only"', 'approval_policy="never"', "features.apps=false", "features.plugins=false", "features.request_permissions_tool=false", 'web_search="disabled"']) {
+    for (const setting of ['default_permissions=":read-only"', 'approval_policy="never"', "features.shell_tool=false", "features.apps=false", "features.plugins=false", "features.request_permissions_tool=false", 'web_search="disabled"']) {
       expect(args).toContain(setting);
     }
     expect(args).toContain("--ignore-user-config");
@@ -30,11 +35,15 @@ describe("Acionamento do verificador", () => {
   });
 
   it("test_ca_02_rejeita_arquivos_locais_e_permite_apenas_exemplo_de_env", () => {
-    for (const file of [".env", ".env.local", ".env.production", ".codex/config.toml", ".aws/credentials", "pasta/.env", ".npmrc"]) {
+    for (const file of [".env", ".env.local", ".env.production", ".codex/config.toml", ".aws/credentials", "pasta/.env", ".npmrc", ".ssh/id_rsa", ".config/gcloud/credentials.db", "client.p12"]) {
       expect(isSecretPath(file)).toBe(true);
     }
     expect(isSecretPath(".env.example")).toBe(false);
     expect(isSecretPath("src/app/page.tsx")).toBe(false);
+  });
+
+  it("test_ca_02_nao_herda_segredos_nem_urls_de_producao", () => {
+    expect(safeEnvironment({ PATH: "tool-path", SystemRoot: "system", DATABASE_URL: "SENTINEL", DIRECT_URL: "SENTINEL", SUPABASE_SERVICE_ROLE_KEY: "SENTINEL", OPENAI_API_KEY: "SENTINEL", GITHUB_TOKEN: "SENTINEL" })).toEqual({ PATH: "tool-path", SystemRoot: "system" });
   });
 
   it("test_ca_03_exige_entradas_concretas_sem_comandos_no_intervalo", () => {
@@ -43,4 +52,29 @@ describe("Acionamento do verificador", () => {
     expect(() => parseArguments(["--spec", "spec", "--commits", "main..HEAD;rm", "--checks", "checks"])).toThrow();
     expect(() => parseArguments(["--model", "outro"])).toThrow();
   });
+
+  it("test_ca_03_preserva_tabela_e_identifica_revisao_base_e_hash_dos_checks", () => {
+    const report = "| CA | evidência | status | observação |\n| CA-01 | teste:1 | SEM TESTE | falta |\nVeredito: NÃO PRONTA";
+    const evidence = formatReport(report, { base: "b".repeat(40), revision: checks.revision, checksText: JSON.stringify(checks) });
+    expect(evidence).toContain(`base=${"b".repeat(40)}`);
+    expect(evidence).toContain(`commit=${checks.revision}`);
+    expect(evidence).toMatch(/checks_sha256=[a-f0-9]{64}/);
+    expect(evidence.endsWith(report)).toBe(true);
+    const root = mkdtempSync(path.join(tmpdir(), "empresti-relatorio-teste-"));
+    const file = saveReport(root, "docs/specs/003-verificador-spec/spec.md", report, { base: "b".repeat(40), revision: checks.revision, checksText: JSON.stringify(checks) });
+    expect(readFileSync(file, "utf8")).toBe(evidence);
+    expect(path.relative(root, file).replaceAll("\\", "/")).toMatch(/^docs\/verificacoes\/003-verificador-spec\//);
+  });
+
+  it("test_ca_02_ca_04_sandbox_real_bloqueia_escrita_sem_corrigir_fontes", () => {
+    const probe = path.join(process.cwd(), `.verificador-prova-${randomUUID()}.tmp`);
+    const code = `const fs=require("node:fs");try{fs.writeFileSync(${JSON.stringify(probe)},"probe",{flag:"wx"});console.log("PROBE_CREATED");process.exitCode=2;}catch(e){if(["EACCES","EPERM"].includes(e.code)){console.log("WRITE_DENIED");}else{console.log(e.code);process.exitCode=3;}}`;
+    const result = spawnSync(process.platform === "win32" ? "codex.exe" : "codex", ["sandbox", "-P", ":read-only", "-C", process.cwd(), process.execPath, "-e", code], { encoding: "utf8", windowsHide: true, timeout: 20000 });
+    // Só remove o arquivo único que a própria prova criou se a proteção falhar.
+    if (result.stdout?.includes("PROBE_CREATED") && existsSync(probe)) unlinkSync(probe);
+    expect(result.error, result.stderr).toBeUndefined();
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("WRITE_DENIED");
+    expect(existsSync(probe)).toBe(false);
+  }, 25000);
 });

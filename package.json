@@ -8,6 +8,7 @@
     "start": "node ./node_modules/next/dist/bin/next start",
     "lint": "node ./node_modules/eslint/bin/eslint.js .",
     "test": "node ./node_modules/vitest/vitest.mjs run",
+    "test:e2e": "node ./node_modules/@playwright/test/cli.js test",
     "verify:spec": "node ./scripts/verificar-spec.mjs"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
