@@ -7,14 +7,20 @@ paths: "<glob opcional>"            # extensão: nem todo harness lê
 # disable-model-invocation: true    # extensão: só roda chamada pelo nome
 ---
 
+<!-- Modelo: copie esta pasta para skills/<nome>/ e substitua os placeholders.
+Remova campos opcionais e pastas de apoio que não forem necessários.
+Este arquivo é um template, não uma skill pronta para execução. -->
+
 # <nome legível>
 
 ## Antes de começar
-<o que precisa existir: spec, CA, ADR. Se faltar, pare.>
+<o que precisa existir: spec, critérios de aceitação (CA), ADR. Se faltar, pare.>
+
+Em conflito, `rules/` e `docs/adr/` vencem esta skill.
 
 ## Procedimento
 1. <passo verificável>
-2. <passo verificável — aponte para references/ quando o detalhe for longo>
+2. <passo verificável — aponte para references/ quando o detalhe for longo e diga quando ler>
 
 ## Verificação
 <o comando, o script ou a saída que prova que foi bem feito>
