@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 export function validateChecks(checks, revision) {
-  if (checks.revision !== revision && checks.revision.length === 0) {
+  if (checks.revision !== revision) {
     throw new Error("Os checks não pertencem ao commit verificado.");
   }
   if (!Array.isArray(checks.commands) || checks.commands.length === 0) {
