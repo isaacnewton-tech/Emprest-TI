@@ -32,3 +32,10 @@ Ao iniciar qualquer funcionalidade nova do PRD.
   marque uma spec pronta com resultados de outro commit.
 - Guarde as tabelas reais em `docs/verificacoes/`, incluindo as
   reprovações. A referência do commit permite comparar as rodadas.
+- Quando o pacote completo ultrapassar o limite do launcher, os checks
+  podem declarar `sourceFiles` com um escopo textual explícito. O
+  launcher exige todos os arquivos de código, testes, scripts, regras,
+  contexto compartilhado, pasta da spec e arquivos alterados. Só
+  documentos de outras specs e verificações anteriores podem ficar
+  fora do texto, mantendo caminho e hash no inventário. Não truncar
+  fontes nem omitir dependências necessárias à prova de um CA.
