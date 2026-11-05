@@ -1,0 +1,25 @@
+{
+  "revision": "29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73",
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 test\n> node ./node_modules/vitest/vitest.mjs run\n\n\n RUN  v5.1.0 C:/Users/isaac/OneDrive - Instituto J&F/Área de Trabalho/3ANO/Inovação e Tecnologia/Grilo/Emprest-TI\n\n\n Test Files  1 passed (1)\n      Tests  8 passed (8)\n   Start at  09:40:47\n   Duration  4.38s (tests 95%, transform 3%, import 2%)\n\n"
+    },
+    {
+      "command": "npm run test:e2e",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 test:e2e\n> node ./node_modules/@playwright/test/cli.js test\n\n\nRunning 3 tests using 1 worker\n\n(node:29948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n  ok 1 tests\\e2e\\verificador.spec.ts:34:5 › test_ca_01_ca_03_launcher_real_rejeita_checks_de_outro_commit (2.7s)\n  ok 2 tests\\e2e\\verificador.spec.ts:42:5 › test_ca_02_launcher_real_rejeita_env_versionado_sem_imprimir_valores (2.2s)\n  ok 3 tests\\e2e\\verificador.spec.ts:51:5 › test_ca_02_launcher_real_rejeita_symlink_antes_de_extrair_snapshot (2.2s)\n\n  3 passed (9.2s)\n"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 lint\n> node ./node_modules/eslint/bin/eslint.js .\n\n"
+    },
+    {
+      "command": "npm run build -- --webpack",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 build\n> node ./node_modules/next/dist/bin/next build --webpack\n\n▲ Next.js 16.3.5 (webpack)\n- Environments: .env\n✓ Running next.config.ts took 492ms\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 6.0s\n  Running TypeScript ...\n  Finished TypeScript in 4.4s ...\n  Collecting page data using 5 workers ...\n  Generating static pages using 5 workers (0/4) ...\n  Generating static pages using 5 workers (1/4) \r\n  Generating static pages using 5 workers (2/4) \r\n  Generating static pages using 5 workers (3/4) \r\n✓ Generating static pages using 5 workers (4/4) in 2.1s\n  Finalizing page optimization ...\n  Collecting build traces ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n└ ○ /login\n\n\n○  (Static)  prerendered as static content\n\n"
+    }
+  ]
+}

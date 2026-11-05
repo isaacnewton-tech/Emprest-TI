@@ -14,7 +14,9 @@
 - Revisão: `4f7c5b66ad6366d404b4f830f56db28ed582a139`.
 - O commit restaura somente a condição original de comparação do SHA. Nenhum teste foi removido ou afrouxado.
 - Comparação verificável: `git diff 9f81aaa..4f7c5b6 -- scripts/verificar-spec.mjs`.
-- Os checks posteriores à restauração serão anexados à auditoria final com o SHA exato. Esta nota não substitui os resultados dos testes nem antecipa o veredito final.
+- Os checks posteriores à restauração estão em `checks-29f8b1c-restaurado.json`, vinculados à revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`: 8 testes unitários e 3 E2E passaram, assim como lint e build com Webpack.
+- A auditoria `2026-11-05T12-42-23.478Z-29f8b1c8.md` ainda reprovou CA-04 por faltar o histórico verificável, embora os checks estivessem verdes. Seu arquivo de resultados anterior aos diffs foi preservado como `checks-29f8b1c-sem-diffs.json`.
+- Os diffs reais de `git show` e os blobs idênticos dos testes antes/depois foram anexados aos checks, sem alterar código ou testes. A nova auditoria `2026-11-05T12-43-52.471Z-29f8b1c8.md` devolveu PRONTA, com todos os quatro critérios atendidos.
 
 ## Isolamento observado
 
