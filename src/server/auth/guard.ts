@@ -5,6 +5,7 @@ import { currentIdentity } from "@/server/services/auth";
 import { requestOrigin } from "@/server/http/origin";
 import { createAuthClient } from "./client";
 import { expireAuthCookies, isAuthCookie, noSessionCache, type CookieAdapter } from "./cookies";
+import { sessionUnavailable } from "./unavailable";
 
 export async function guardSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -42,7 +43,7 @@ export async function guardSession(request: NextRequest) {
     }
     return loginRoute ? redirect("/catalogo") : response;
   } catch {
-    if (protectedRoute) return withCookies(NextResponse.rewrite(new URL("/sessao-indisponivel", requestOrigin(request)), { status: 503 }));
+    if (protectedRoute) return withCookies(sessionUnavailable());
     return response;
   }
 }

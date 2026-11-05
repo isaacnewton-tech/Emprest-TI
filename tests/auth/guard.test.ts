@@ -88,7 +88,11 @@ describe("Guardas e renovação de sessão", () => {
     unavailable = true;
     const response = await guardSession(new NextRequest("https://app.example.test/catalogo", { headers: { cookie } }));
     expect(response.status).toBe(503);
-    expect(response.headers.get("x-middleware-rewrite")).toBe("https://app.example.test/sessao-indisponivel");
+    const body = await response.text();
+    expect(body).toContain("Não foi possível verificar sua sessão agora. Tente novamente.");
+    expect(body).not.toContain(fixtureEmail);
+    expect(response.headers.get("content-security-policy")).toContain("style-src 'sha256-");
+    expect(response.headers.get("content-security-policy")).not.toContain("unsafe-inline");
     expect(response.headers.get("x-middleware-next")).toBeNull();
   });
 });

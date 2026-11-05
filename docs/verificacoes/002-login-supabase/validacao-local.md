@@ -14,6 +14,7 @@ A conta real informada pelo usuário não foi usada em testes automatizados. Nã
 - O lint React interpretou o callback `use` de uma fixture do Playwright como um Hook. O parâmetro foi renomeado para `provide`; a execução e as asserções da fixture foram preservadas.
 - A primeira checagem de tipos após iniciar a atualização de dependências ocorreu antes do término da instalação. Ela não foi aceita como validação. Após a instalação, os tipos foram verificados novamente; o UUID da requisição fictícia foi ajustado ao tipo declarado pelo ambiente atualizado.
 - A indisponibilidade do provedor na área protegida usa uma página sem dados de conta no mesmo Nocturne, mantendo HTTP 503 e uma opção de tentar novamente. Os testes de navegador conferem status, mensagem e o fundo escuro.
+- O E2E identificou que a primeira versão dessa tela, servida por rewrite para uma página estática, saía com HTTP 200. Ela foi substituída por uma resposta HTML direta com status 503 e CSP restritiva; o CSS fixo é autorizado por hash, sem `unsafe-inline`. A rota auxiliar foi removida. A exigência de status 503 foi mantida nos testes.
 - A configuração pública obrigatória do Auth é validada com Zod ao carregar o módulo do servidor. O Vitest fornece somente valores locais de fixture e esvazia as credenciais privilegiadas; os testes específicos podem substituir esses valores por outros locais.
 
 ## Dependências
