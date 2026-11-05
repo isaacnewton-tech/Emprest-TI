@@ -20,6 +20,9 @@ O usuário determinou que os requisitos da prática prevaleçam nos conflitos co
 | Crédito das imagens | A tela deve exibir “Fotos: Pixabay” com link; registrar também autor, página de origem e licença de cada foto. | Contrato da prática adaptado à fonte autorizada pelo professor e documentação da API. |
 | Escritas em produção | Banco e Storage do deploy são alterados pelo usuário. O agente prepara artefatos e instruções locais. | Regras gerais da prática. |
 | Testes | Seguir `rules/tests.md`, fornecido pelo usuário, inclusive PostgreSQL local real e identidade simulada apenas em tests/. | Instrução direta do usuário. |
+| Conta do professor | Colaborador no tenant `suporte_ti`. | Resposta do usuário em 05/11/2026. |
+| Conta de teste manual | `isaacmaifrinodias@gmail.com`; preservar a conta do professor com zero empréstimos. | Resposta do usuário em 05/11/2026. |
+| Repetição do seed | Preservar equipamentos já usados em empréstimos; sincronizar apenas os nunca utilizados. | Resposta do usuário em 05/11/2026. |
 
 ## Entrega 1 — verificador
 
@@ -40,21 +43,20 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 - A chave do Pixabay foi fornecida pelo usuário. Ela fica em `.local-secrets/pixabay.key`, ignorada pelo Git. É credencial apenas do preparador local de imagens, não variável da aplicação ou do deploy. O preparador não lê o .env do Supabase nem recebe credenciais de upload.
 - Executar em produção os comandos preparados para migrations, dados iniciais e upload de imagens.
 - Manter a conta do professor com zero empréstimos; usar outra conta nos testes.
-- Aprovar os planos de funcionalidade antes da implementação, conforme o ciclo SDD do projeto.
+- Os planos de login (002) e dados iniciais (005) foram aprovados pelo usuário em 05/11/2026. O plano da entrega 4 ainda depende das decisões de prazo.
 
 ## Lacunas a resolver na etapa correspondente
 
 - Definir o calendário dos 14 dias úteis: finais de semana, feriados e fuso horário.
-- Definir papel e vínculo de tenant da conta do professor e da conta usada nos testes.
-- Definir como repetir o seed preservando dados que já tenham sido usados em empréstimos.
+- Completar a seleção das sete fotos ainda sem aprovação, mantendo a fonte e os critérios da prática.
 
 ## Estado das demais entregas
 
-- Entrega 2: skill e scripts implementados com a API do Pixabay; checks finais e auditoria pendentes. A rodada real inspecionou 46 candidatas: 5 aprovadas e 41 recusadas. O lote permanece bloqueado por faltarem 7 fotos adequadas. Consultas têm cache de 24 horas e respeitam a janela indicada nos cabeçalhos de limite; fotos são processadas localmente. Evidências em `docs/verificacoes/004-imagens-equipamentos/`. Upload no Supabase permanece manual.
-- Entrega 3: spec de dados iniciais ainda não elaborada.
+- Entrega 2: implementação da skill PRONTA na revisão `c4aad6bb6d1ce3ecf130b9c81b45447fdb42eabd`, com 21 testes, 7 E2E, lint, build e auditoria visual independente. A rodada real inspecionou 46 candidatas: 5 aprovadas e 41 recusadas. O lote permanece bloqueado por faltarem 7 fotos adequadas. Consultas têm cache de 24 horas e respeitam a janela indicada nos cabeçalhos de limite; fotos são processadas localmente. Evidências em `docs/verificacoes/004-imagens-equipamentos/`. Upload no Supabase permanece manual.
+- Entrega 3: spec, plano e tarefas em `docs/specs/005-dados-iniciais/`; plano aprovado, implementação pendente.
 - Entrega 4: spec de solicitar empréstimo ainda não elaborada.
 - Entrega 5: ENTREGA.md deve refletir decisões e evidências reais, sem preencher resultados futuros.
-- Pré-requisito adicional: a integração de login tem documentos propostos em `docs/specs/002-login-supabase/`, mas ainda não tem código implementado.
+- Pré-requisito adicional: o plano de login em `docs/specs/002-login-supabase/` foi aprovado, mas ainda não tem código implementado.
 
 ## Limitações e pendências técnicas
 
