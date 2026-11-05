@@ -26,10 +26,11 @@ Em andamento; não declarada concluída.
 
 - Já existem `agents/verificador-spec.md` e o gatilho em `rules/spec-flow.md`.
 - `rules/tests.md` foi fornecido pelo usuário e adicionado ao projeto.
-- Falta separar execução de checks que geram arquivos da auditoria que não pode editar fontes.
-- Falta demonstrar restrição técnica do verificador, sem depender apenas de instruções textuais.
-- Falta executar e registrar a prova com erro plantado e corrigido, com commits separados.
-- Falta guardar rodadas comparáveis com o SHA verificado, a tabela e os resultados dos checks.
+- Os checks locais foram separados da auditoria sem ferramentas. O verificador recebe as fontes do commit com caminho e linha, sem herdar a conversa.
+- O perfil somente leitura negou escrita e rede nos testes reais. A auditoria não tem shell, apps, plugins, busca web ou escalada.
+- O erro foi plantado em `9f81aaa`, reprovado pelo verificador e desfeito em `4f7c5b6`, sem alterar os testes.
+- As rodadas e resultados reais estão em `docs/verificacoes/003-verificador-spec/`.
+- Falta concluir os checks após a restauração e obter a auditoria final; a entrega ainda não está declarada pronta.
 
 ## Dependências de intervenção humana
 

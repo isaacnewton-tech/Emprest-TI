@@ -53,7 +53,7 @@ export function isSecretPath(file) {
 }
 
 export function formatReport(report, { base, revision, checksText }) {
-  return `<!-- base=${base}; commit=${revision}; checks_sha256=${createHash("sha256").update(checksText).digest("hex")} -->\n${report}`;
+  return `<!-- base=${base}; commit=${revision}; checks_sha256=${createHash("sha256").update(checksText).digest("hex")} -->\n${report.replace(/[ \t]+$/gm, "")}`;
 }
 
 export function safeEnvironment(environment) {

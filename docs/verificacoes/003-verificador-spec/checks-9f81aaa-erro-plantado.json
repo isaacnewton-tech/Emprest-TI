@@ -1,0 +1,25 @@
+{
+  "revision": "9f81aaadf8666fa04b7a3dbab4c4a02995367f90",
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 1,
+      "output": "\n> emprest-ti@0.1.0 test\n> node ./node_modules/vitest/vitest.mjs run\n\n\n RUN  v5.1.0 C:/Users/isaac/OneDrive - Instituto J&F/Área de Trabalho/3ANO/Inovação e Tecnologia/Grilo/Emprest-TI\n\n ❯ tests/verificador/launcher.test.mjs (8 tests | 1 failed) 2887ms\n   ❯ Acionamento do verificador (8)\n     × test_ca_01_rejeita_checks_de_outra_revisao 25ms\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  tests/verificador/launcher.test.mjs > Acionamento do verificador > test_ca_01_rejeita_checks_de_outra_revisao\nAssertionError: expected [Function] to throw an error\n\n- Expected:\nnull\n\n+ Received:\nundefined\n\n ❯ tests/verificador/launcher.test.mjs:16:58\n     14| describe(\"Acionamento do verificador\", () => {\n     15|   it(\"test_ca_01_rejeita_checks_de_outra_revisao\", () => {\n     16|     expect(() => validateChecks(checks, \"b\".repeat(40))).toThrow(\"comm…\n       |                                                          ^\n     17|     expect(validateChecks(checks, checks.revision)).toBe(checks);\n     18|   });\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n\n Test Files  1 failed (1)\n      Tests  1 failed | 7 passed (8)\n   Start at  09:35:34\n   Duration  3.60s (tests 94%, transform 3%, import 3%, worker 1%)\n\n"
+    },
+    {
+      "command": "npm run test:e2e",
+      "exitCode": 1,
+      "output": "\n> emprest-ti@0.1.0 test:e2e\n> node ./node_modules/@playwright/test/cli.js test\n\n\nRunning 3 tests using 1 worker\n\n(node:19020) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n  x  1 tests\\e2e\\verificador.spec.ts:34:5 › test_ca_01_ca_03_launcher_real_rejeita_checks_de_outro_commit (2.8s)\n(node:16552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n  ok 2 tests\\e2e\\verificador.spec.ts:42:5 › test_ca_02_launcher_real_rejeita_env_versionado_sem_imprimir_valores (2.1s)\n  ok 3 tests\\e2e\\verificador.spec.ts:51:5 › test_ca_02_launcher_real_rejeita_symlink_antes_de_extrair_snapshot (2.4s)\n\n\n  1) tests\\e2e\\verificador.spec.ts:34:5 › test_ca_01_ca_03_launcher_real_rejeita_checks_de_outro_commit \n\n    Error: expect(received).toContain(expected) // indexOf\n\n    Expected substring: \"não pertencem ao commit verificado\"\n    Received string:    \"ENOENT: no such file or directory, open 'C:\\\\Users\\\\isaac\\\\AppData\\\\Local\\\\Temp\\\\empresti-verificador-CBIkn6\\\\snapshot\\\\agents\\\\verificador-spec.md'\n    \"\n\n      37 |   const result = invoke(root, revision, \"0\".repeat(40));\n      38 |   expect(result.status).toBe(1);\n    > 39 |   expect(result.stderr).toContain(\"não pertencem ao commit verificado\");\n         |                         ^\n      40 | });\n      41 |\n      42 | test(\"test_ca_02_launcher_real_rejeita_env_versionado_sem_imprimir_valores\", () => {\n        at C:\\Users\\isaac\\OneDrive - Instituto J&F\\Área de Trabalho\\3ANO\\Inovação e Tecnologia\\Grilo\\Emprest-TI\\tests\\e2e\\verificador.spec.ts:39:25\n\n    Error Context: test-results\\verificador-test-ca-01-ca--e8542-eita-checks-de-outro-commit\\error-context.md\n\n  1 failed\n    tests\\e2e\\verificador.spec.ts:34:5 › test_ca_01_ca_03_launcher_real_rejeita_checks_de_outro_commit \n  2 passed (10.2s)\n"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 lint\n> node ./node_modules/eslint/bin/eslint.js .\n\n"
+    },
+    {
+      "command": "npm run build -- --webpack",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 build\n> node ./node_modules/next/dist/bin/next build --webpack\n\n▲ Next.js 16.3.5 (webpack)\n- Environments: .env\n✓ Running next.config.ts took 377ms\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 7.2s\n  Running TypeScript ...\n  Finished TypeScript in 5.7s ...\n  Collecting page data using 5 workers ...\n  Generating static pages using 5 workers (0/4) ...\n  Generating static pages using 5 workers (1/4) \r\n  Generating static pages using 5 workers (2/4) \r\n  Generating static pages using 5 workers (3/4) \r\n✓ Generating static pages using 5 workers (4/4) in 1769ms\n  Finalizing page optimization ...\n  Collecting build traces ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n└ ○ /login\n\n\n○  (Static)  prerendered as static content\n\n"
+    }
+  ]
+}
