@@ -1,0 +1,34 @@
+{
+  "revision": "da58cc90d6f738ee6bd543dd3d3156148fa8b992",
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 test\n> node ./node_modules/vitest/vitest.mjs run\n\n\n RUN  v5.1.0 C:/Users/isaac/OneDrive - Instituto J&F/Área de Trabalho/3ANO/Inovação e Tecnologia/Grilo/Emprest-TI\n\n\n Test Files  2 passed (2)\n      Tests  20 passed (20)\n   Start at  10:53:25\n   Duration  12.86s (tests 96%, import 3%, transform 1%)\n\n"
+    },
+    {
+      "command": "npm run test:e2e",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 test:e2e\n> node ./node_modules/@playwright/test/cli.js test\n\n\nRunning 7 tests using 1 worker\n\n(node:31424) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n  ok 1 tests\\e2e\\imagens.spec.ts:11:5 › test_ca_01_ca_05_cli_sem_chave_falha_sem_api_ou_env_do_supabase (1.9s)\n  ok 2 tests\\e2e\\imagens.spec.ts:22:5 › test_ca_03_cli_bloqueia_export_sem_revisao_e_nao_cria_pacote (1.2s)\n  ok 3 tests\\e2e\\imagens.spec.ts:30:5 › test_ca_05_cli_nao_oferece_upload_de_producao (1.0s)\n  ok 4 tests\\e2e\\imagens.spec.ts:36:5 › test_ca_03_ca_04_cli_bloqueia_lote_incompleto_sem_fabricar_fotos (888ms)\n  ok 5 tests\\e2e\\verificador.spec.ts:34:5 › test_ca_01_ca_03_launcher_real_rejeita_checks_de_outro_commit (4.8s)\n  ok 6 tests\\e2e\\verificador.spec.ts:42:5 › test_ca_02_launcher_real_rejeita_env_versionado_sem_imprimir_valores (4.5s)\n  ok 7 tests\\e2e\\verificador.spec.ts:51:5 › test_ca_02_launcher_real_rejeita_symlink_antes_de_extrair_snapshot (5.1s)\n\n  7 passed (23.4s)\n"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 lint\n> node ./node_modules/eslint/bin/eslint.js .\n\n"
+    },
+    {
+      "command": "npm run build -- --webpack",
+      "exitCode": 0,
+      "output": "\n> emprest-ti@0.1.0 build\n> node ./node_modules/next/dist/bin/next build --webpack\n\n▲ Next.js 16.3.5 (webpack)\n- Environments: .env\n✓ Running next.config.ts took 10.4s\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 7.7s\n  Running TypeScript ...\n  Finished TypeScript in 7.3s ...\n  Collecting page data using 5 workers ...\n  Generating static pages using 5 workers (0/4) ...\n  Generating static pages using 5 workers (1/4) \r\n  Generating static pages using 5 workers (2/4) \r\n  Generating static pages using 5 workers (3/4) \r\n✓ Generating static pages using 5 workers (4/4) in 3.7s\n  Finalizing page optimization ...\n  Collecting build traces ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n└ ○ /login\n\n\n○  (Static)  prerendered as static content\n\n"
+    }
+  ],
+  "additionalEvidence": {
+    "regression": "Três testes novos reproduziram as falhas apontadas antes da correção. Agora passam: conflito, revogação e arquivos extras.",
+    "skillValidation": {
+      "exitCode": 0,
+      "output": "Skill is valid!"
+    },
+    "realImages": "docs/verificacoes/004-imagens-equipamentos/api-real.json",
+    "scope": "Implementação da skill. O lote real continua com 5 aprovações e 7 pendências; nenhuma publicação efetuada."
+  }
+}

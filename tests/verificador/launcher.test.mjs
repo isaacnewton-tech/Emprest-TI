@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
-import { randomUUID } from "node:crypto";
-import { existsSync, mkdtempSync, readFileSync, unlinkSync } from "node:fs";
+import { createHash, randomUUID } from "node:crypto";
+import { existsSync, mkdtempSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { codexArguments, formatReport, isSecretPath, parseArguments, safeEnvironment, saveReport, validateChecks } from "../../scripts/verificar-spec.mjs";
+import { codexArguments, formatReport, isSecretPath, parseArguments, resolveVisualEvidence, safeEnvironment, saveReport, validateChecks } from "../../scripts/verificar-spec.mjs";
 
 const checks = {
   revision: "a".repeat(40),
@@ -40,6 +40,22 @@ describe("Acionamento do verificador", () => {
     }
     expect(isSecretPath(".env.example")).toBe(false);
     expect(isSecretPath("src/app/page.tsx")).toBe(false);
+  });
+
+  it("test_ca_02_ca_03_anexa_apenas_imagens_versionadas_com_hash_conferido_sem_ampliar_permissoes", () => {
+    const root = mkdtempSync(path.join(tmpdir(), "empresti-anexo-teste-"));
+    const bytes = Buffer.from("fixture de bytes; o teste valida vínculo, não conteúdo visual");
+    writeFileSync(path.join(root, "foto.jpg"), bytes);
+    const entry = { path: "foto.jpg", sha256: createHash("sha256").update(bytes).digest("hex") };
+    const resolved = resolveVisualEvidence(root, ["foto.jpg"], [entry]);
+    const args = codexArguments(root, "report.md", resolved.map((image) => image.absolute));
+    expect(args[args.indexOf("--image") + 1]).toBe(path.join(root, "foto.jpg"));
+    expect(args).toContain('default_permissions=":read-only"');
+    expect(args).toContain("features.shell_tool=false");
+    expect(() => resolveVisualEvidence(root, [], [entry])).toThrow("versionado");
+    expect(() => resolveVisualEvidence(root, ["foto.jpg"], [{ ...entry, sha256: "0".repeat(64) }])).toThrow("Hash");
+    expect(() => resolveVisualEvidence(root, ["foto.jpg"], [entry, entry])).toThrow("único");
+    expect(() => resolveVisualEvidence(root, ["../foto.jpg"], [{ ...entry, path: "../foto.jpg" }])).toThrow("snapshot");
   });
 
   it("test_ca_02_nao_herda_segredos_nem_urls_de_producao", () => {
