@@ -20,3 +20,13 @@ Ao iniciar qualquer funcionalidade nova do PRD.
 - A spec só é pronta com "Veredito: PRONTA". Qualquer outro resultado
   volta para as tarefas — quem corrige é o agente principal, nunca o
   verificador.
+- A verificação de entrega usa `npm run verify:spec -- --spec
+  docs/specs/<NNN-nome>/spec.md --commits <base>..<fim> --checks
+  <resultados-locais.json>`. O launcher cria um snapshot do commit,
+  sem configuração local, e abre uma sessão independente somente
+  leitura, sem apps/plugins nem escalada de permissões.
+- O agente principal executa os checks locais antes da auditoria e
+  registra revisão, comando, código de saída e saída em JSON. Não
+  marque uma spec pronta com resultados de outro commit.
+- Guarde as tabelas reais em `docs/verificacoes/`, incluindo as
+  reprovações. A referência do commit permite comparar as rodadas.
