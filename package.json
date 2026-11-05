@@ -6,7 +6,9 @@
     "dev": "node ./node_modules/next/dist/bin/next dev",
     "build": "node ./node_modules/next/dist/bin/next build",
     "start": "node ./node_modules/next/dist/bin/next start",
-    "lint": "node ./node_modules/eslint/bin/eslint.js ."
+    "lint": "node ./node_modules/eslint/bin/eslint.js .",
+    "test": "node ./node_modules/vitest/vitest.mjs run",
+    "verify:spec": "node ./scripts/verificar-spec.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -25,6 +27,7 @@
     "eslint-config-next": "^16.0.0",
     "prettier": "^3.0.0",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "vitest": "^5.1.0"
   }
 }
