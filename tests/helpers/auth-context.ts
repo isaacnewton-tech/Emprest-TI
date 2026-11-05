@@ -1,5 +1,5 @@
 import type { TRPCContext } from "@/server/api/context";
-import type { AuthGateway } from "@/server/services/auth";
+import type { AuthGateway, currentIdentity } from "@/server/services/auth";
 
 export function testAuthGateway(overrides: Partial<AuthGateway> = {}): AuthGateway {
   return {
@@ -10,10 +10,11 @@ export function testAuthGateway(overrides: Partial<AuthGateway> = {}): AuthGatew
   };
 }
 
-export function testAuthContext(overrides: Partial<TRPCContext> = {}): TRPCContext {
+export function testAuthContext(overrides: Partial<TRPCContext> & { user?: Awaited<ReturnType<typeof currentIdentity>> } = {}): TRPCContext {
+  const { user, ...context } = overrides;
   return {
     request: new Request("http://localhost/api/trpc", { method: "POST", headers: { origin: "http://localhost" } }),
-    responseHeaders: new Headers(), requestId: "fixture-request", auth: testAuthGateway(), user: null, clearSessionCookies() {},
-    ...overrides,
+    responseHeaders: new Headers(), requestId: "fixture-request", auth: testAuthGateway(), getIdentity: async () => user ?? null, clearSessionCookies() {},
+    ...context,
   };
 }

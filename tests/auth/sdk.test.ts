@@ -91,4 +91,19 @@ describe("SDK Supabase e endpoint real com transporte controlado localmente", ()
     expect(headers.getSetCookie()).toHaveLength(3);
     expect(headers.getSetCookie().every((cookie) => cookie.includes("Max-Age=0") && /HttpOnly/i.test(cookie) && /Secure/i.test(cookie))).toBe(true);
   });
+
+  it("test_ca_05_sair_expira_cookies_mesmo_se_a_verificacao_do_provedor_estiver_indisponivel", async () => {
+    let unavailable = false;
+    configure(async (input) => {
+      const path = new URL(input instanceof Request ? input.url : input.toString()).pathname;
+      if (unavailable) return json({ error_code: "unexpected_failure", msg: "indisponível na fixture" }, 503);
+      return json(path.endsWith("/token") ? fixtureSession() : fixtureUser());
+    });
+    const login = await POST(post("login", { email: fixtureEmail, password: fixturePassword }));
+    unavailable = true;
+    const logout = await POST(post("logout", {}, cookieHeader(login)));
+    expect(logout.status).toBe(503);
+    expect((await logout.json()).error.json.data.code).toBe("SERVICE_UNAVAILABLE");
+    expect(logout.headers.getSetCookie().some((cookie) => cookie.includes("Max-Age=0"))).toBe(true);
+  });
 });

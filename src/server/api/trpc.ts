@@ -25,7 +25,8 @@ export const publicProcedure = t.procedure.use(({ ctx, type, next }) => {
   return next();
 });
 
-export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
-  if (!ctx.user) throw new TRPCError({ code: "UNAUTHORIZED", message: "Entre na sua conta para continuar." });
-  return next({ ctx: { ...ctx, user: ctx.user } });
+export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  const user = await ctx.getIdentity();
+  if (!user) throw new TRPCError({ code: "UNAUTHORIZED", message: "Entre na sua conta para continuar." });
+  return next({ ctx: { ...ctx, user } });
 });

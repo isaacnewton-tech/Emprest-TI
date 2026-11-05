@@ -6,6 +6,11 @@ export const isAuthCookie = (name: string) => name === AUTH_COOKIE || name.start
 export type CookieWrite = { name: string; value: string; options: CookieOptions };
 export type CookieAdapter = { getAll(): { name: string; value: string }[]; setAll(cookies: CookieWrite[], headers: Record<string, string>): void };
 
+export function expireAuthCookies(adapter: CookieAdapter, secure: boolean) {
+  const names = new Set([AUTH_COOKIE, ...adapter.getAll().filter((cookie) => isAuthCookie(cookie.name)).map((cookie) => cookie.name)]);
+  adapter.setAll(Array.from(names, (name) => ({ name, value: "", options: { maxAge: 0, httpOnly: true, secure, sameSite: "lax", path: "/" } })), {});
+}
+
 export function noSessionCache(headers: Headers) {
   headers.set("cache-control", "private, no-cache, no-store, must-revalidate, max-age=0");
   headers.set("pragma", "no-cache");
@@ -28,8 +33,7 @@ export function requestCookies(request: Request, headers: Headers, secure: boole
   return {
     ...adapter,
     clear() {
-      const names = new Set([AUTH_COOKIE, ...adapter.getAll().filter((cookie) => isAuthCookie(cookie.name)).map((cookie) => cookie.name)]);
-      adapter.setAll(Array.from(names, (name) => ({ name, value: "", options: { maxAge: 0 } })), {});
+      expireAuthCookies(adapter, secure);
     },
   };
 }

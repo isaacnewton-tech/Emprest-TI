@@ -7,8 +7,9 @@ export async function createContext({ req, resHeaders }: Pick<FetchCreateContext
   noSessionCache(resHeaders);
   const cookies = requestCookies(req, resHeaders, process.env.NODE_ENV === "production");
   const auth: AuthGateway = createAuthClient(cookies).auth;
-  const user = await currentIdentity(auth);
-  return { request: req, responseHeaders: resHeaders, requestId: crypto.randomUUID(), auth, user, clearSessionCookies: cookies.clear };
+  let identity: ReturnType<typeof currentIdentity> | undefined;
+  const getIdentity = () => identity ??= currentIdentity(auth);
+  return { request: req, responseHeaders: resHeaders, requestId: crypto.randomUUID(), auth, getIdentity, clearSessionCookies: cookies.clear };
 }
 
 export type TRPCContext = Awaited<ReturnType<typeof createContext>>;
