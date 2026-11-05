@@ -1,17 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
+import { loginSchema } from "@/shared/auth";
+import { api } from "@/trpc/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const loginSchema = z.object({
-  email: z.string().email("Informe um e-mail válido."),
-  password: z.string().min(1, "Informe sua senha."),
-});
 
 type LoginValues = z.infer<typeof loginSchema>;
 
@@ -58,18 +57,44 @@ function ArrowIcon() {
 
 export function LoginScreen() {
   const [notice, setNotice] = useState<string | null>(null);
+  const [redirecting, setRedirecting] = useState(false);
+  const inFlight = useRef(false);
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const login = api.auth.login.useMutation({
+    onError(error) {
+      setNotice(error.data?.code === "UNAUTHORIZED" ? "E-mail ou senha inválidos." : "Não foi possível acessar sua conta agora. Tente novamente.");
+    },
+  });
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
 
-  function onSubmit() {
-    setNotice("O acesso ainda não está disponível. Procure Operações.");
+  async function onSubmit(values: LoginValues) {
+    if (inFlight.current) return;
+    inFlight.current = true;
+    setNotice(null);
+    let signedIn = false;
+    try {
+      await login.mutateAsync(values);
+      signedIn = true;
+      setRedirecting(true);
+      queryClient.clear();
+      router.replace("/catalogo");
+      router.refresh();
+    } catch {
+      // A mensagem segura é definida no onError da mutação.
+    } finally {
+      if (!signedIn) inFlight.current = false;
+    }
   }
+
+  const busy = login.isPending || isSubmitting || redirecting;
 
   return (
     <main className="login-page" data-screen-label="01 Login">
@@ -92,12 +117,12 @@ export function LoginScreen() {
             <div className="brand-rule" aria-hidden="true" />
             <div className="hero-metrics" aria-label="Regras de empréstimo">
               <div className="hero-metric">
-                <strong>3</strong>
+                <strong>5</strong>
                 <span>itens por pessoa</span>
               </div>
               <div className="hero-metric">
                 <strong>14</strong>
-                <span>dias de prazo</span>
+                <span>dias úteis de prazo</span>
               </div>
             </div>
           </div>
@@ -113,7 +138,7 @@ export function LoginScreen() {
               <p>Acesse com sua conta de colaborador.</p>
             </div>
 
-            <form noValidate onSubmit={handleSubmit(onSubmit)}>
+            <form aria-busy={busy} noValidate onSubmit={(event) => { void handleSubmit(onSubmit)(event); }}>
               <div className="form-field">
                 <label htmlFor="email">E-mail</label>
                 <Input
@@ -151,12 +176,12 @@ export function LoginScreen() {
                 )}
               </div>
 
-              <Button className="login-submit" type="submit">
-                <span>Entrar</span>
+              <Button className="login-submit" disabled={busy} type="submit">
+                <span>{busy ? "Entrando…" : "Entrar"}</span>
                 <ArrowIcon />
               </Button>
               {notice && (
-                <p className="login-notice" role="status">
+                <p className="login-notice" role="alert">
                   {notice}
                 </p>
               )}
