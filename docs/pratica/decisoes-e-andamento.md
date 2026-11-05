@@ -16,7 +16,8 @@ O usuário determinou que os requisitos da prática prevaleçam nos conflitos co
 | Manutenção | TI-0004, TI-0007 e TI-0010 estão em manutenção; os outros 9 estão disponíveis. | O usuário corrigiu a orientação anterior e escolheu explicitamente a lista, não o briefing, para TI-0010. |
 | Senhas e chaves | Não colocar valores em código ou no histórico do Git. O pedido de senha escrita no seed contraria essa regra geral da própria prática. | Regras gerais da prática. |
 | Verificador | Aponta falhas; o agente principal corrige. Não corrigir testes no verificador. | Independência exigida pela prática. |
-| Crédito das imagens | A tela deve exibir “Fotos: Pexels” com link. O pedido de catálogo sem crédito contraria o contrato da skill na própria prática. | Contrato de imagens-equipamentos. |
+| Fonte das imagens | Usar exclusivamente a API do Pixabay, substituindo Pexels. | O usuário informou a alteração autorizada pelo professor e forneceu a chave. |
+| Crédito das imagens | A tela deve exibir “Fotos: Pixabay” com link; registrar também autor, página de origem e licença de cada foto. | Contrato da prática adaptado à fonte autorizada pelo professor e documentação da API. |
 | Escritas em produção | Banco e Storage do deploy são alterados pelo usuário. O agente prepara artefatos e instruções locais. | Regras gerais da prática. |
 | Testes | Seguir `rules/tests.md`, fornecido pelo usuário, inclusive PostgreSQL local real e identidade simulada apenas em tests/. | Instrução direta do usuário. |
 
@@ -36,7 +37,7 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 
 ## Dependências de intervenção humana
 
-- Fornecer a chave do Pexels em configuração local, sem colá-la em código ou versioná-la, para a entrega de imagens.
+- A chave do Pixabay foi fornecida pelo usuário. Ela fica em `.local-secrets/pixabay.key`, ignorada pelo Git. É credencial apenas do preparador local de imagens, não variável da aplicação ou do deploy. O preparador não lê o .env do Supabase nem recebe credenciais de upload.
 - Executar em produção os comandos preparados para migrations, dados iniciais e upload de imagens.
 - Manter a conta do professor com zero empréstimos; usar outra conta nos testes.
 - Aprovar os planos de funcionalidade antes da implementação, conforme o ciclo SDD do projeto.
@@ -49,7 +50,7 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 
 ## Estado das demais entregas
 
-- Entrega 2: skill imagens-equipamentos ainda não criada.
+- Entrega 2: em preparação com a API do Pixabay, autorizada pelo professor. Consultas têm cache de 24 horas; fotos são baixadas e processadas localmente. Upload no Supabase permanece manual.
 - Entrega 3: spec de dados iniciais ainda não elaborada.
 - Entrega 4: spec de solicitar empréstimo ainda não elaborada.
 - Entrega 5: ENTREGA.md deve refletir decisões e evidências reais, sem preencher resultados futuros.
