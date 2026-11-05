@@ -19,3 +19,9 @@ O comando real `node skills/imagens-equipamentos/scripts/imagens.mjs preparar` t
 O validador da skill retornou `Skill is valid!` usando Python em UTF-8. A primeira execução com a codificação padrão do Windows falhou ao decodificar acentos; o arquivo da skill foi preservado em UTF-8. O PyYAML usado pelo validador fica apenas no diretório local ignorado, sem acrescentar dependência Python à aplicação.
 
 Não houve upload nem alteração no Supabase remoto, no `.env` ou na Vercel. A integração do catálogo com as URLs do Storage pertence às próximas etapas. A implementação da skill pode ser auditada, mas o conjunto real de 12 fotos e a publicação ainda estão pendentes.
+
+## Primeira auditoria e correções
+
+O verificador da revisão `d72b50f` devolveu NÃO PRONTA em CA-03 e CA-05. Ele identificou que o export não bloqueava uma reprovação simultânea à aprovação, nem retirava um pacote antigo após revogar a revisão. Também apontou que arquivos extras permaneciam no pacote.
+
+Três testes de regressão reproduziram esses comportamentos antes da correção. O preparador agora bloqueia o conflito e substitui o pacote por inteiro. Se a revisão falhar, preserva o pacote anterior na quarentena local e retira `export/`. Nenhum arquivo é apagado. Os caminhos absolutos de origem e destino ficam dentro da área gerenciada; links para diretórios externos são recusados. Repetir um lote válido e sem extras conserva os mesmos arquivos e manifesto.

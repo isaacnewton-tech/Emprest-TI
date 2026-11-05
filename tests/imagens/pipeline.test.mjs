@@ -162,4 +162,36 @@ describe("Preparação de imagens pela API do Pixabay", () => {
     writeJson(path.join(root, ".image-work/revisoes.json"), { approved });
     await expect(prepareExport(equipments, { root })).rejects.toThrow("mesma foto");
   }, 20000);
+
+  it("test_ca_03_bloqueia_foto_aprovada_e_reprovada_para_o_mesmo_equipamento", async () => {
+    const { root, approved } = await preparedFixture();
+    writeJson(path.join(root, ".image-work/revisoes.json"), { approved, rejected: [{ ...approved[0], reason: "Texto legível na foto." }] });
+    await expect(prepareExport(equipments, { root })).rejects.toThrow("também consta como reprovada");
+    expect(existsSync(path.join(root, ".image-work/export"))).toBe(false);
+  }, 20000);
+
+  it("test_ca_05_revogacao_retira_export_anterior_e_preserva_copia_em_quarentena", async () => {
+    const { root } = await preparedFixture();
+    const first = await prepareExport(equipments, { root });
+    const before = readFileSync(path.join(first.exportDirectory, "manifest.json"), "utf8");
+    writeJson(path.join(root, ".image-work/revisoes.json"), { approved: [], rejected: [] });
+    await expect(prepareExport(equipments, { root })).rejects.toThrow("exatamente 12");
+    expect(existsSync(first.exportDirectory)).toBe(false);
+    const archive = path.join(root, ".image-work/quarentena");
+    const archived = readdirSync(archive);
+    expect(archived).toHaveLength(1);
+    expect(readFileSync(path.join(archive, archived[0], "manifest.json"), "utf8")).toBe(before);
+  }, 20000);
+
+  it("test_ca_05_nova_preparacao_remove_extras_do_pacote_sem_apagar_o_arquivo", async () => {
+    const { root } = await preparedFixture();
+    const first = await prepareExport(equipments, { root });
+    writeFileSync(path.join(first.exportDirectory, "foto-nao-revisada.jpg"), "arquivo extra do teste");
+    await prepareExport(equipments, { root });
+    expect(readdirSync(first.exportDirectory).sort()).toEqual(["manifest.json", "suporte_ti"]);
+    expect(readdirSync(path.join(first.exportDirectory, "suporte_ti"))).toHaveLength(12);
+    const archive = path.join(root, ".image-work/quarentena");
+    const archived = readdirSync(archive);
+    expect(readFileSync(path.join(archive, archived[0], "foto-nao-revisada.jpg"), "utf8")).toBe("arquivo extra do teste");
+  }, 20000);
 });

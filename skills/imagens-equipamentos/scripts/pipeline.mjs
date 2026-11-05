@@ -1,5 +1,5 @@
-import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash, randomUUID } from "node:crypto";
+import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, renameSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -146,11 +146,13 @@ export function validateReview(review, selection, actualHash) {
   if (typeof review.reviewer !== "string" || !review.reviewer.trim() || typeof review.notes !== "string" || !review.notes.trim() || typeof review.reviewedAt !== "string" || !Number.isFinite(Date.parse(review.reviewedAt))) throw new Error("A revisão precisa de responsável, data e observações.");
 }
 
-export async function prepareExport(equipments, { root } = {}) {
+async function validateBatch(equipments, root) {
   const reviewFile = path.join(root, ".image-work", "revisoes.json");
   if (!existsSync(reviewFile)) throw new Error("Falta a revisão visual em .image-work/revisoes.json. Nenhum export liberado.");
   const reviews = readJson(reviewFile);
   if (!Array.isArray(reviews.approved) || reviews.approved.length !== equipments.length || equipments.length !== 12) throw new Error("O export exige exatamente 12 revisões aprovadas, uma por equipamento.");
+  if (reviews.rejected !== undefined && !Array.isArray(reviews.rejected)) throw new Error("Registro de reprovações inválido.");
+  const rejected = reviews.rejected ?? [];
   const ids = new Set();
   const hashes = new Set();
   const records = [];
@@ -168,6 +170,7 @@ export async function prepareExport(equipments, { root } = {}) {
     const bytes = readFileSync(path.join(root, ".image-work", "candidates", `${photo.id}.jpg`));
     const hash = sha256(bytes);
     validateReview(review, selection, hash);
+    if (rejected.some((entry) => entry.patrimonio === equipment.patrimonio && (entry.photoId === photo.id || entry.imageSha256 === hash))) throw new Error("A foto aprovada também consta como reprovada para este equipamento.");
     const metadata = await sharp(bytes).metadata();
     if (metadata.width !== 800 || metadata.height !== 600 || metadata.format !== "jpeg") throw new Error("Dimensões ou formato alterados após a revisão.");
     if (ids.has(photo.id) || hashes.has(hash)) throw new Error("Uma mesma foto não pode ser usada em dois equipamentos.");
@@ -176,9 +179,56 @@ export async function prepareExport(equipments, { root } = {}) {
     files.push({ name: storageKey, bytes });
     records.push({ ...equipment, source: "pixabay", photoId: photo.id, sourcePage: photo.pageURL, photographer: photo.user, photographerProfile: `https://pixabay.com/users/${encodeURIComponent(photo.user)}-${photo.user_id}/`, license: "Pixabay Content License", licenseUrl: "https://pixabay.com/service/terms/", queryUsed: selection.query, retrievedAt: selection.retrievedAt, width: 800, height: 600, imageSha256: hash, bucket: "equipamentos", storageKey, credit: "Fotos: Pixabay", creditUrl: "https://pixabay.com/", review: { reviewer: review.reviewer, reviewedAt: review.reviewedAt, notes: review.notes } });
   }
-  // Nenhuma escrita de export ocorre antes de validar o conjunto inteiro.
-  const exportDirectory = path.join(root, ".image-work", "export");
-  for (const file of files) writeStable(path.join(exportDirectory, file.name), file.bytes);
-  json(path.join(exportDirectory, "manifest.json"), { source: "pixabay", equipmentCount: 12, images: records, rejected: Array.isArray(reviews.rejected) ? reviews.rejected : [] });
-  return { exportDirectory, records };
+  return { files, records, manifest: Buffer.from(`${JSON.stringify({ source: "pixabay", equipmentCount: 12, images: records, rejected }, null, 2)}\n`) };
+}
+
+function managedDirectory(parent, name) {
+  const directory = path.resolve(parent, name);
+  if (path.dirname(directory) !== parent) throw new Error("Diretório fora da área local gerenciada.");
+  if (existsSync(directory) && (lstatSync(directory).isSymbolicLink() || !lstatSync(directory).isDirectory() || realpathSync(directory) !== directory)) throw new Error("A área de export não aceita links ou diretórios externos.");
+  return directory;
+}
+
+function quarantineExport(work, exportDirectory) {
+  if (!existsSync(exportDirectory)) return;
+  managedDirectory(work, "export");
+  const quarantine = managedDirectory(work, "quarentena");
+  mkdirSync(quarantine, { recursive: true });
+  const destination = path.resolve(quarantine, `export-${randomUUID()}`);
+  if (path.dirname(destination) !== quarantine) throw new Error("Destino fora da quarentena local.");
+  // Origem e destino absolutos foram conferidos dentro de .image-work. Nenhum arquivo é apagado.
+  renameSync(exportDirectory, destination);
+}
+
+function isCurrentPackage(directory, files, manifest) {
+  if (!existsSync(directory)) return false;
+  const top = readdirSync(directory).sort();
+  if (top.join("|") !== "manifest.json|suporte_ti") return false;
+  const images = path.join(directory, "suporte_ti");
+  if (lstatSync(images).isSymbolicLink() || !lstatSync(images).isDirectory()) return false;
+  if (readdirSync(images).sort().join("|") !== files.map((file) => path.basename(file.name)).sort().join("|")) return false;
+  const matches = (file, bytes) => !lstatSync(file).isSymbolicLink() && lstatSync(file).isFile() && readFileSync(file).equals(bytes);
+  return matches(path.join(directory, "manifest.json"), manifest) && files.every((file) => matches(path.join(directory, file.name), file.bytes));
+}
+
+export async function prepareExport(equipments, { root } = {}) {
+  const realRoot = realpathSync(root);
+  const work = managedDirectory(realRoot, ".image-work");
+  mkdirSync(work, { recursive: true });
+  const exportDirectory = managedDirectory(work, "export");
+  try {
+    const { files, records, manifest } = await validateBatch(equipments, realRoot);
+    if (isCurrentPackage(exportDirectory, files, manifest)) return { exportDirectory, records };
+    // Só construir um novo pacote depois de validar as 12 imagens. O diretório atual é substituído por inteiro.
+    const staging = mkdtempSync(path.join(work, "export-pendente-"));
+    for (const file of files) writeStable(path.join(staging, file.name), file.bytes);
+    writeStable(path.join(staging, "manifest.json"), manifest);
+    quarantineExport(work, exportDirectory);
+    renameSync(staging, exportDirectory);
+    return { exportDirectory, records };
+  } catch (error) {
+    // Uma aprovação revogada não deixa o pacote anterior disponível para publicação.
+    quarantineExport(work, exportDirectory);
+    throw error;
+  }
 }

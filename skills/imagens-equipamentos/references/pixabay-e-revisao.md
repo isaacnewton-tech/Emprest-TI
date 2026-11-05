@@ -38,3 +38,5 @@ Em `.image-work/revisoes.json`, usar um objeto com `approved` e `rejected`:
 ```
 
 Esses valores são exemplo de formato, não revisão real. O script valida a estrutura e o hash, mas não enxerga pessoas, marcas ou texto. Quem faz a inspeção responde por essa avaliação. Hash diferente exige nova inspeção; `false` ou campo ausente bloqueia o export. Manter as reprovações, com seus motivos, para o ENTREGA.md.
+
+Uma imagem não pode constar como aprovada e reprovada para o mesmo patrimônio, seja pelo ID ou pelo hash. Esse conflito bloqueia a preparação. Cada nova execução valida o conjunto atual: se ele deixou de ser válido, o pacote anterior sai de `export/` e é preservado em `.image-work/quarentena/`. Arquivos extras também retiram o pacote anterior da área de publicação; um novo pacote completo o substitui. A quarentena é histórico local, nunca material para upload.
