@@ -50,7 +50,7 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 
 ## Estado das demais entregas
 
-- Entrega 2: em preparação com a API do Pixabay, autorizada pelo professor. Consultas têm cache de 24 horas; fotos são baixadas e processadas localmente. Upload no Supabase permanece manual.
+- Entrega 2: skill e scripts implementados com a API do Pixabay; checks finais e auditoria pendentes. A rodada real inspecionou 46 candidatas: 5 aprovadas e 41 recusadas. O lote permanece bloqueado por faltarem 7 fotos adequadas. Consultas têm cache de 24 horas e respeitam a janela indicada nos cabeçalhos de limite; fotos são processadas localmente. Evidências em `docs/verificacoes/004-imagens-equipamentos/`. Upload no Supabase permanece manual.
 - Entrega 3: spec de dados iniciais ainda não elaborada.
 - Entrega 4: spec de solicitar empréstimo ainda não elaborada.
 - Entrega 5: ENTREGA.md deve refletir decisões e evidências reais, sem preencher resultados futuros.
@@ -62,3 +62,4 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 - Os E2E desta entrega exercitam a infraestrutura de CLI, não o login ou páginas do produto. Não houve banco de dados nesta etapa. As features com Prisma exigirão PostgreSQL real via Testcontainers conforme rules/tests.md.
 - O pacote de fontes traz lockfile e binários somente por hash. CAs que dependam de inspecioná-los precisam de evidência adicional; não devem ser aprovados apenas pelo hash.
 - `npm audit`, após instalar as ferramentas de teste, apontou 12 alertas nas dependências existentes: 9 moderados, 2 altos e 1 crítico. O relatório inclui Next.js, Zod, sharp transitivo e a cadeia de lint. Não foi executado `npm audit fix --force`. A atualização deve ser tratada antes da publicação final; esta etapa não corrigiu esses alertas.
+- A instalação explícita de sharp para a entrega 2 atualizou essa dependência e o instalador passou a informar 11 alertas: 9 moderados, 1 alto e 1 crítico. As demais atualizações continuam pendentes.
