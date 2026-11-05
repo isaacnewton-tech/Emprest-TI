@@ -11,3 +11,9 @@ Infraestrutura da prática, autorizada pelo usuário como entrega 2. A fonte Pix
 7. Auditar a implementação com o verificador. O upload no bucket público fica como execução manual do usuário, sem comando remoto na skill.
 
 Referências: https://pixabay.com/api/docs/ e https://pixabay.com/service/license-summary/. O crédito no catálogo é mantido pelo contrato da prática; a licença genérica não dispensa o registro de origem e a revisão de direitos de terceiros.
+
+## Aditamento autorizado — recortes e conclusão do lote
+
+O usuário autorizou recortes sem geração ou retoque de conteúdo e pediu concluir a entrega 2 antes de iniciar a 4. Implementar uma tarefa de recorte com sharp sobre a prévia inteira já obtida pela API. Guardar cada variante separadamente, vinculada ao hash e à geometria da origem. Recalcular o recorte no export para impedir alterações de conteúdo fora dessa operação. Uma mesma foto de origem continua proibida em dois equipamentos, mesmo com recortes diferentes.
+
+Depois, revisar os sete itens restantes, mantendo as reprovações anteriores. Só concluir o lote local com 12 imagens distintas e revisão real de todos os arquivos finais, manifesto completo, repetição idempotente e auditoria visual independente. O usuário publica no Storage; essa confirmação permanece distinta da preparação local.
