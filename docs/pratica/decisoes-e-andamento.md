@@ -47,15 +47,11 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 - A chave do Pixabay foi fornecida pelo usuário. Ela fica em `.local-secrets/pixabay.key`, ignorada pelo Git. É credencial apenas do preparador local de imagens, não variável da aplicação ou do deploy. O preparador não lê o .env do Supabase nem recebe credenciais de upload.
 - Executar em produção os comandos preparados para migrations, dados iniciais e upload de imagens.
 - Manter a conta do professor com zero empréstimos; usar outra conta nos testes.
-- Os planos de login (002) e dados iniciais (005) foram aprovados pelo usuário em 05/11/2026. O plano da entrega 4 ainda depende das decisões de prazo.
-
-## Lacunas a resolver na etapa correspondente
-
-- Completar a seleção das sete fotos ainda sem aprovação, mantendo a fonte e os critérios da prática.
+- Os planos de login (002) e dados iniciais (005) foram aprovados pelo usuário em 05/11/2026. A entrega 4 ainda requer spec e plano próprios com o calendário confirmado.
 
 ## Estado das demais entregas
 
-- Entrega 2: implementação da skill PRONTA na revisão `c4aad6bb6d1ce3ecf130b9c81b45447fdb42eabd`, com 21 testes, 7 E2E, lint, build e auditoria visual independente. A rodada real inspecionou 46 candidatas: 5 aprovadas e 41 recusadas. O lote permanece bloqueado por faltarem 7 fotos adequadas. Consultas têm cache de 24 horas e respeitam a janela indicada nos cabeçalhos de limite; fotos são processadas localmente. Evidências em `docs/verificacoes/004-imagens-equipamentos/`. Upload no Supabase permanece manual.
+- Entrega 2 concluída para a revisão `09bf0ed37c46a071a5e09770f20d2dbcb77e762c`. O verificador marcou CA-01 a CA-05 como ATENDIDO e examinou os 12 JPEG finais. O pacote `entregas/02-imagens-equipamentos.zip` tem cinco fotos integrais, sete recortes e um manifesto com 55 recusas preservadas. Passaram 48 testes Vitest, 13 Playwright, lint e build. O upload no bucket público `equipamentos` fica a cargo do usuário. O relatório está em `docs/verificacoes/004-imagens-equipamentos/2026-11-05T23-15-45.597Z-09bf0ed3.md`.
 - Entrega 3: spec, plano e tarefas em `docs/specs/005-dados-iniciais/`; plano aprovado, implementação pendente.
 - Entrega 4: spec de solicitar empréstimo ainda não elaborada.
 - Entrega 5: ENTREGA.md deve refletir decisões e evidências reais, sem preencher resultados futuros.

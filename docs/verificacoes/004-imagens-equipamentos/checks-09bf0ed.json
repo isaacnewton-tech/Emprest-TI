@@ -1,0 +1,1106 @@
+{
+  "revision": "09bf0ed37c46a071a5e09770f20d2dbcb77e762c",
+  "sourceFiles": [
+    ".env.example",
+    ".gitignore",
+    ".prettierrc.json",
+    "AGENTS.md",
+    "LICENSE",
+    "agents/verificador-spec.md",
+    "certs/supabase-ca.crt",
+    "docs/PRD.md",
+    "docs/adr/001-stack.md",
+    "docs/pratica/decisoes-e-andamento.md",
+    "docs/specs/004-imagens-equipamentos/plan.md",
+    "docs/specs/004-imagens-equipamentos/spec.md",
+    "docs/specs/004-imagens-equipamentos/tasks.md",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final.md",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0001.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0002.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0003.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0004.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0005.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0006.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0007.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0008.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0009.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0010.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0011.jpg",
+    "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0012.jpg",
+    "entregas/02-imagens-equipamentos.zip",
+    "eslint.config.mjs",
+    "layout.md",
+    "next-env.d.ts",
+    "next.config.ts",
+    "package-lock.json",
+    "package.json",
+    "playwright.config.ts",
+    "postcss.config.mjs",
+    "rules/checks.md",
+    "rules/implementation.md",
+    "rules/migration.md",
+    "rules/operacao.md",
+    "rules/restrictions.md",
+    "rules/secrets.md",
+    "rules/spec-flow.md",
+    "rules/tests.md",
+    "scripts/verificar-spec.mjs",
+    "skills/frontend-design/LICENSE.txt",
+    "skills/frontend-design/SKILL.md",
+    "skills/frontend-design/agents/openai.yaml",
+    "skills/imagens-equipamentos/SKILL.md",
+    "skills/imagens-equipamentos/assets/equipamentos.json",
+    "skills/imagens-equipamentos/references/pixabay-e-revisao.md",
+    "skills/imagens-equipamentos/references/publicacao-manual.md",
+    "skills/imagens-equipamentos/scripts/imagens.mjs",
+    "skills/imagens-equipamentos/scripts/pipeline.mjs",
+    "skills/template/SKILL.md",
+    "skills/template/assets/.gitkeep",
+    "skills/template/references/.gitkeep",
+    "skills/template/scripts/.gitkeep",
+    "src/app/api/trpc/[trpc]/route.ts",
+    "src/app/catalogo/page.tsx",
+    "src/app/globals.css",
+    "src/app/layout.tsx",
+    "src/app/login/page.tsx",
+    "src/app/page.tsx",
+    "src/components/authenticated-area.tsx",
+    "src/components/login-screen.tsx",
+    "src/components/ui/button.tsx",
+    "src/components/ui/input.tsx",
+    "src/proxy.ts",
+    "src/server/api/context.ts",
+    "src/server/api/root.ts",
+    "src/server/api/routers/auth.ts",
+    "src/server/api/trpc.ts",
+    "src/server/auth/client.ts",
+    "src/server/auth/cookies.ts",
+    "src/server/auth/guard.ts",
+    "src/server/auth/unavailable.ts",
+    "src/server/env.ts",
+    "src/server/http/origin.ts",
+    "src/server/services/auth.ts",
+    "src/shared/auth.ts",
+    "src/trpc/react.tsx",
+    "tests/auth/guard.test.ts",
+    "tests/auth/login-screen.test.tsx",
+    "tests/auth/sdk.test.ts",
+    "tests/auth/service.test.ts",
+    "tests/auth/transport.test.ts",
+    "tests/e2e/auth.spec.ts",
+    "tests/e2e/imagens.spec.ts",
+    "tests/e2e/verificador.spec.ts",
+    "tests/helpers/auth-context.ts",
+    "tests/helpers/auth-harness.ts",
+    "tests/helpers/auth-provider.ts",
+    "tests/helpers/server-only.ts",
+    "tests/imagens/pipeline.test.mjs",
+    "tests/verificador/launcher.test.mjs",
+    "tsconfig.json",
+    "vitest.config.mjs"
+  ],
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "output": "> emprest-ti@0.1.0 test\r\n> node ./node_modules/vitest/vitest.mjs run\r\n\r\n\r\n RUN  v5.1.0 C:/Users/isaac/OneDrive - Instituto J&F/Área de Trabalho/3ANO/Inovação e Tecnologia/Grilo/Emprest-TI\r\n\r\n\r\n Test Files  7 passed (7)\r\n      Tests  48 passed (48)\r\n   Start at  20:10:17\r\n   Duration  13.86s (tests 61%, import 20%, environment 15%, transform 4%, worker 1%)"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "output": "> emprest-ti@0.1.0 lint\r\n> node ./node_modules/eslint/bin/eslint.js ."
+    },
+    {
+      "command": "npm run build -- --webpack",
+      "exitCode": 0,
+      "output": "> emprest-ti@0.1.0 build\r\n> node ./node_modules/next/dist/bin/next build --webpack\r\n\r\n▲ Next.js 16.4.5 (webpack)\r\n- Environments: .env\r\n✓ Running next.config.ts took 379ms\r\n\r\n  Creating an optimized production build ...\r\n✓ Compiled successfully in 54s\r\n  Running TypeScript ...\r\n  Finished TypeScript in 20.7s ...\r\n  Collecting page data using 7 workers ...\r\n  Generating static pages using 7 workers (0/5) ...\r\n  Generating static pages using 7 workers (1/5) \r\n  Generating static pages using 7 workers (2/5) \r\n  Generating static pages using 7 workers (3/5) \r\n✓ Generating static pages using 7 workers (5/5) in 5.0s\r\n  Finalizing page optimization ...\r\n  Collecting build traces ...\r\n\r\nRoute (app)\r\n┌ ○ /\r\n├ ○ /_not-found\r\n├ ƒ /api/trpc/[trpc]\r\n├ ○ /catalogo\r\n└ ○ /login\r\n\r\n\r\nƒ Proxy (Middleware)\r\n\r\n○  (Static)   prerendered as static content\r\nƒ  (Dynamic)  server-rendered on demand"
+    },
+    {
+      "command": "npm run test:e2e",
+      "exitCode": 0,
+      "output": "> emprest-ti@0.1.0 test:e2e\r\n> node ./node_modules/@playwright/test/cli.js test\r\n\r\n\r\nRunning 13 tests using 1 worker\r\n\r\n(node:20984) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\r\n(Use `node --trace-warnings ...` to show where the warning was created)\r\n  ok  1 tests\\e2e\\auth.spec.ts:24:1 › test_ca_01_ca_03_ca_05_login_navegacao_protegida_e_saida_com_cookies_httponly (6.7s)\r\n  ok  2 tests\\e2e\\auth.spec.ts:44:1 › test_ca_02_ca_06_validacao_e_recusa_visiveis_sem_criar_sessao (1.5s)\r\n  ok  3 tests\\e2e\\auth.spec.ts:59:1 › test_ca_06_responsividade_sem_overflow_e_envios_simultaneos_bloqueados (2.2s)\r\n  ok  4 tests\\e2e\\auth.spec.ts:74:1 › test_ca_04_cookie_expirado_e_renovado_no_proxy_sem_perder_autenticacao (1.8s)\r\n  ok  5 tests\\e2e\\auth.spec.ts:88:1 › test_ca_07_mutacao_de_outra_origem_e_input_de_outro_usuario_sao_recusados (1.6s)\r\n  ok  6 tests\\e2e\\auth.spec.ts:100:1 › test_ca_03_ca_04_provedor_indisponivel_nao_libera_pagina_protegida (1.8s)\r\n(node:7824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\r\n(Use `node --trace-warnings ...` to show where the warning was created)\r\n  ok  7 tests\\e2e\\imagens.spec.ts:11:5 › test_ca_01_ca_05_cli_sem_chave_falha_sem_api_ou_env_do_supabase (1.2s)\r\n  ok  8 tests\\e2e\\imagens.spec.ts:22:5 › test_ca_03_cli_bloqueia_export_sem_revisao_e_nao_cria_pacote (533ms)\r\n  ok  9 tests\\e2e\\imagens.spec.ts:30:5 › test_ca_05_cli_nao_oferece_upload_de_producao (518ms)\r\n  ok 10 tests\\e2e\\imagens.spec.ts:36:5 › test_ca_03_ca_04_cli_bloqueia_lote_incompleto_sem_fabricar_fotos (471ms)\r\n  ok 11 tests\\e2e\\verificador.spec.ts:34:5 › test_ca_01_ca_03_launcher_real_rejeita_checks_de_outro_commit (2.9s)\r\n  ok 12 tests\\e2e\\verificador.spec.ts:42:5 › test_ca_02_launcher_real_rejeita_env_versionado_sem_imprimir_valores (2.9s)\r\n  ok 13 tests\\e2e\\verificador.spec.ts:51:5 › test_ca_02_launcher_real_rejeita_symlink_antes_de_extrair_snapshot (4.1s)\r\n\r\n  13 passed (48.7s)"
+    },
+    {
+      "command": "Preparação do lote real duas vezes, comparando hashes e mtime",
+      "exitCode": 0,
+      "output": "Duas preparações passaram. 12 JPEG e manifesto preservaram hashes e horários de modificação."
+    },
+    {
+      "command": "Verificar o ZIP e comparar seu conteúdo com o export e os anexos",
+      "exitCode": 0,
+      "output": "ZIP validado: 13 arquivos, 12 fotos iguais às evidências e ao export. SHA-256: 2673cd4b995ca3a17e6787c147dfe2d26f905719ecfba856b377a6ad013aa3f0"
+    },
+    {
+      "command": "quick_validate.py skills/imagens-equipamentos",
+      "exitCode": 0,
+      "output": "Skill is valid!"
+    },
+    {
+      "command": "Verificar credenciais em fontes e bundles (somente contagens)",
+      "exitCode": 0,
+      "output": "{\"sourceFilesScanned\":138,\"browserBundlesScanned\":25,\"configuredSecretValuesChecked\":2,\"credentialMatches\":[]}"
+    }
+  ],
+  "visualEvidence": [
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0001.jpg",
+      "sha256": "5768f1f11ec84e0afa6893d2b62c02496536340045ced7edee196f62b7b9e207"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0002.jpg",
+      "sha256": "4d374b8608c13fc2b4683b6a13c2c29024b3049246f712f74de57661695cd542"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0003.jpg",
+      "sha256": "07d4c3447ef59388e4fbed9f2f8babdcc15f7aee733929fdaeb0869ededb2f84"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0004.jpg",
+      "sha256": "51be3e3fbfb9345a27a336472be2d4ac6ff47a8e006bc08b588b291ffabfeccb"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0005.jpg",
+      "sha256": "0055c5914adf028de28498af177bc585f4e3684bc3de1ce89ad9febb83e6721c"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0006.jpg",
+      "sha256": "505ee7bbd52bfb8a75a964e7c2d6fc20372d2d533f5cfeabdb91b0ea7cfd465f"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0007.jpg",
+      "sha256": "2f57a321b26b6af308408a2d3b2663fba50976b64c5eb00a8c4f8c04cfd79c92"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0008.jpg",
+      "sha256": "8f1778cfdc6efbe7b2785ce7bf89f6e1128fdb2b2fc582190aff56b929c37e63"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0009.jpg",
+      "sha256": "b5a0d6f9060a834fff34b6d3e9a83bf5de068716a3be24f96518b6ba711190aa"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0010.jpg",
+      "sha256": "5af8d6d71c1c228e35235b060bbd838d5b3977d9ecb7ce7985c52b97c619576e"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0011.jpg",
+      "sha256": "146fb34a4cdcf9c41a5b1c27b32645d99fac140251cbd1a7738f576b97e8ff01"
+    },
+    {
+      "path": "docs/verificacoes/004-imagens-equipamentos/lote-final/TI-0012.jpg",
+      "sha256": "031918fe83f7f3c23dcfb80cfdd459d804428ec6e34bac094e10b244104610d6"
+    }
+  ],
+  "artifact": {
+    "zip": "entregas/02-imagens-equipamentos.zip",
+    "sha256": "2673cd4b995ca3a17e6787c147dfe2d26f905719ecfba856b377a6ad013aa3f0",
+    "files": 13,
+    "attachedPhotosMatch": true,
+    "exportMatches": true,
+    "manifest": {
+      "source": "pixabay",
+      "equipmentCount": 12,
+      "images": [
+        {
+          "patrimonio": "TI-0001",
+          "nome": "Notebook 14 polegadas",
+          "categoria": "notebook",
+          "situacao": "disponivel",
+          "busca": "laptop on white desk",
+          "source": "pixabay",
+          "photoId": 6856557,
+          "sourcePage": "https://pixabay.com/photos/laptop-technology-electronic-6856557/",
+          "photographer": "LUNEMax",
+          "photographerProfile": "https://pixabay.com/users/LUNEMax-24406265/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "closed laptop",
+          "retrievedAt": "2026-11-05T13:29:41.723Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "5768f1f11ec84e0afa6893d2b62c02496536340045ced7edee196f62b7b9e207",
+          "transformation": {
+            "kind": "crop",
+            "canvas": {
+              "width": 800,
+              "height": 600
+            },
+            "region": {
+              "left": 0,
+              "top": 35,
+              "width": 600,
+              "height": 500
+            },
+            "baseImageSha256": "200ed0cc423df619ee52ff42682ebe16126261e4581ea80c3ab6b7d891b7ec10"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0001.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+            "reviewedAt": "2026-11-05T22:58:35.045Z",
+            "notes": "Notebook prateado aberto visto de lado, tela preta vazia e portas visíveis. Recorte exclui a parte direita com teclas legíveis; no arquivo final não há pessoas, logos ou texto legível. Polegadas são atributo do cadastro, não inferidas da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0002",
+          "nome": "Notebook 15 polegadas",
+          "categoria": "notebook",
+          "situacao": "disponivel",
+          "busca": "open laptop minimal desk",
+          "source": "pixabay",
+          "photoId": 3036166,
+          "sourcePage": "https://pixabay.com/photos/computer-laptop-blank-empty-screen-3036166/",
+          "photographer": "kirill_makes_pics",
+          "photographerProfile": "https://pixabay.com/users/kirill_makes_pics-5203613/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "notebook isolated",
+          "retrievedAt": "2026-11-05T13:33:02.361Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "4d374b8608c13fc2b4683b6a13c2c29024b3049246f712f74de57661695cd542",
+          "transformation": {
+            "kind": "whole"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0002.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local em 800×600",
+            "reviewedAt": "2026-11-05T13:37:34.144Z",
+            "notes": "Notebook de perfil sobre fundo branco com tela vazia. Sem pessoas, marca ou texto legível no arquivo 800×600; as teclas não têm inscrições legíveis neste enquadramento. As polegadas não são inferidas da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0003",
+          "nome": "Notebook 13 polegadas",
+          "categoria": "notebook",
+          "situacao": "disponivel",
+          "busca": "laptop closeup keyboard",
+          "source": "pixabay",
+          "photoId": 593327,
+          "sourcePage": "https://pixabay.com/photos/desk-laptop-notebook-pen-workspace-593327/",
+          "photographer": "StartupStockPhotos",
+          "photographerProfile": "https://pixabay.com/users/StartupStockPhotos-690514/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "laptop",
+          "retrievedAt": "2026-11-05T13:20:25.19Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "07d4c3447ef59388e4fbed9f2f8babdcc15f7aee733929fdaeb0869ededb2f84",
+          "transformation": {
+            "kind": "crop",
+            "canvas": {
+              "width": 800,
+              "height": 600
+            },
+            "region": {
+              "left": 0,
+              "top": 30,
+              "width": 620,
+              "height": 290
+            },
+            "baseImageSha256": "796a58f26f89a9429be2a61daf93883204b15e33905e74f1f65419849006dd25"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0003.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+            "reviewedAt": "2026-11-05T22:58:35.045Z",
+            "notes": "Notebook aberto reconhecível, tela preta e teclado desfocado sem texto legível. O recorte deixa fora a caneta com inscrição; não há pessoas nem logos legíveis. Polegadas não são inferidas da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0004",
+          "nome": "Notebook 15 polegadas",
+          "categoria": "notebook",
+          "situacao": "manutencao",
+          "busca": "closed laptop on table",
+          "source": "pixabay",
+          "photoId": 958882,
+          "sourcePage": "https://pixabay.com/photos/macbook-air-apple-design-958882/",
+          "photographer": "Yi7iY",
+          "photographerProfile": "https://pixabay.com/users/Yi7iY-1425063/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "ultrabook",
+          "retrievedAt": "2026-11-05T22:53:19.22Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "51be3e3fbfb9345a27a336472be2d4ac6ff47a8e006bc08b588b291ffabfeccb",
+          "transformation": {
+            "kind": "crop",
+            "canvas": {
+              "width": 800,
+              "height": 600
+            },
+            "region": {
+              "left": 185,
+              "top": 155,
+              "width": 590,
+              "height": 160
+            },
+            "baseImageSha256": "041b6527664e208f3c1d71854c9b9ebe3a268b3efcec775d705cc1ba7d78d057"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0004.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+            "reviewedAt": "2026-11-05T22:58:35.045Z",
+            "notes": "Notebook fechado visto de lado, com tampa, base e portas reconhecíveis. O recorte exclui completamente a mão e o logo da tampa. Restam apenas símbolos de portas, sem texto legível, pessoas ou marcas. Polegadas não são inferidas da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0005",
+          "nome": "Monitor 24 polegadas",
+          "categoria": "monitor",
+          "situacao": "disponivel",
+          "busca": "computer monitor on desk",
+          "source": "pixabay",
+          "photoId": 17894,
+          "sourcePage": "https://pixabay.com/photos/blank-business-computer-desktop-17894/",
+          "photographer": "PublicDomainPictures",
+          "photographerProfile": "https://pixabay.com/users/PublicDomainPictures-14/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "computer monitor isolated",
+          "retrievedAt": "2026-11-05T13:29:42.006Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "0055c5914adf028de28498af177bc585f4e3684bc3de1ce89ad9febb83e6721c",
+          "transformation": {
+            "kind": "whole"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0005.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local em 800×600",
+            "reviewedAt": "2026-11-05T13:32:22.629Z",
+            "notes": "Monitor independente sobre fundo branco, tela vazia. Sem pessoas, marcas ou texto legível; os controles exibem apenas símbolos. O tamanho em polegadas não é inferido da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0006",
+          "nome": "Monitor 27 polegadas",
+          "categoria": "monitor",
+          "situacao": "disponivel",
+          "busca": "monitor screen office desk",
+          "source": "pixabay",
+          "photoId": 1868496,
+          "sourcePage": "https://pixabay.com/photos/apple-computer-desk-workspace-1868496/",
+          "photographer": "Pexels",
+          "photographerProfile": "https://pixabay.com/users/Pexels-2286921/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "monitor screen office desk",
+          "retrievedAt": "2026-11-05T13:03:07.339Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "505ee7bbd52bfb8a75a964e7c2d6fc20372d2d533f5cfeabdb91b0ea7cfd465f",
+          "transformation": {
+            "kind": "crop",
+            "canvas": {
+              "width": 800,
+              "height": 600
+            },
+            "region": {
+              "left": 230,
+              "top": 145,
+              "width": 320,
+              "height": 190
+            },
+            "baseImageSha256": "792d598d5d942ecce35c85462fe4fab5ee63830263c8bed3e7c2219d2a28faa7"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0006.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+            "reviewedAt": "2026-11-05T22:58:35.045Z",
+            "notes": "Parte frontal do monitor, moldura preta e tela branca vazia. Recorte termina acima do logo e exclui os periféricos com inscrições; o painel continua reconhecível. Sem pessoas, marcas ou texto. Polegadas não são inferidas da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0007",
+          "nome": "Monitor 22 polegadas",
+          "categoria": "monitor",
+          "situacao": "manutencao",
+          "busca": "black computer screen",
+          "source": "pixabay",
+          "photoId": 820277,
+          "sourcePage": "https://pixabay.com/photos/computer-desk-workspace-home-820277/",
+          "photographer": "fancycrave1",
+          "photographerProfile": "https://pixabay.com/users/fancycrave1-1115284/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "blank monitor",
+          "retrievedAt": "2026-11-05T13:33:03.134Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "2f57a321b26b6af308408a2d3b2663fba50976b64c5eb00a8c4f8c04cfd79c92",
+          "transformation": {
+            "kind": "crop",
+            "canvas": {
+              "width": 800,
+              "height": 600
+            },
+            "region": {
+              "left": 135,
+              "top": 115,
+              "width": 490,
+              "height": 295
+            },
+            "baseImageSha256": "d966e0b92c8a2d159911be3ec2cc7a078099b0f4702db473e12cabf116042b3d"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0007.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+            "reviewedAt": "2026-11-05T22:58:35.045Z",
+            "notes": "Monitor com tela escura vazia e contorno da moldura. Recorte fica acima do logo e exclui fone, teclado e caixa de som. Sem pessoas, marcas ou texto legível. Polegadas não são inferidas da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0008",
+          "nome": "Cabo HDMI 2 m",
+          "categoria": "cabo",
+          "situacao": "disponivel",
+          "busca": "hdmi cable",
+          "source": "pixabay",
+          "photoId": 643728,
+          "sourcePage": "https://pixabay.com/photos/hdmi-cable-connection-643728/",
+          "photographer": "PIX1861",
+          "photographerProfile": "https://pixabay.com/users/PIX1861-468748/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "hdmi cable isolated",
+          "retrievedAt": "2026-11-05T13:33:03.37Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "8f1778cfdc6efbe7b2785ce7bf89f6e1128fdb2b2fc582190aff56b929c37e63",
+          "transformation": {
+            "kind": "whole"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0008.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local em 800×600",
+            "reviewedAt": "2026-11-05T13:37:34.148Z",
+            "notes": "Conector HDMI e cabo enrolado sobre fundo neutro. Sem pessoas, marcas, texto ou telas. A metragem não é inferida da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0009",
+          "nome": "Cabo USB-C 1 m",
+          "categoria": "cabo",
+          "situacao": "disponivel",
+          "busca": "usb cable white background",
+          "source": "pixabay",
+          "photoId": 4498745,
+          "sourcePage": "https://pixabay.com/photos/cable-wire-technology-plug-4498745/",
+          "photographer": "tomekwalecki",
+          "photographerProfile": "https://pixabay.com/users/tomekwalecki-13027968/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "usb-c",
+          "retrievedAt": "2026-11-05T13:20:26.381Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "b5a0d6f9060a834fff34b6d3e9a83bf5de068716a3be24f96518b6ba711190aa",
+          "transformation": {
+            "kind": "whole"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0009.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local em 800×600",
+            "reviewedAt": "2026-11-05T13:29:26.917Z",
+            "notes": "Conector USB-C em primeiro plano, sem pessoas, marcas, texto ou telas. Representa o tipo de cabo; a metragem não é inferida da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0010",
+          "nome": "Cabo de rede 3 m",
+          "categoria": "cabo",
+          "situacao": "manutencao",
+          "busca": "ethernet cable",
+          "source": "pixabay",
+          "photoId": 494649,
+          "sourcePage": "https://pixabay.com/photos/network-cable-cable-patch-494649/",
+          "photographer": "blickpixel",
+          "photographerProfile": "https://pixabay.com/users/blickpixel-52945/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "ethernet cable",
+          "retrievedAt": "2026-11-05T13:03:08.6Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "5af8d6d71c1c228e35235b060bbd838d5b3977d9ecb7ce7985c52b97c619576e",
+          "transformation": {
+            "kind": "whole"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0010.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local em 800×600",
+            "reviewedAt": "2026-11-05T13:17:15.935Z",
+            "notes": "Conectores RJ45 coloridos sobre fundo branco. Não há pessoas, logos ou texto legível; a imagem representa cabo de rede. A metragem não é inferida da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0011",
+          "nome": "Webcam Full HD",
+          "categoria": "camera",
+          "situacao": "disponivel",
+          "busca": "webcam",
+          "source": "pixabay",
+          "photoId": 1163880,
+          "sourcePage": "https://pixabay.com/photos/video-conference-hd-material-1163880/",
+          "photographer": "willsong",
+          "photographerProfile": "https://pixabay.com/users/willsong-1891844/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "webcam black",
+          "retrievedAt": "2026-11-05T13:33:04.062Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "146fb34a4cdcf9c41a5b1c27b32645d99fac140251cbd1a7738f576b97e8ff01",
+          "transformation": {
+            "kind": "crop",
+            "canvas": {
+              "width": 800,
+              "height": 600
+            },
+            "region": {
+              "left": 95,
+              "top": 112,
+              "width": 610,
+              "height": 425
+            },
+            "baseImageSha256": "ef9ba152e291f4fb9c942e587049be86b81a167e8ee2a14638e4c27e66bd8507"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0011.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+            "reviewedAt": "2026-11-05T22:58:35.045Z",
+            "notes": "Câmera de videoconferência com lente, suporte articulado e base reconhecíveis, representando webcam externa. O recorte exclui a pequena marca acima da lente; não há pessoas, texto ou marca legível. Resolução Full HD pertence ao cadastro e não é inferida da foto."
+          }
+        },
+        {
+          "patrimonio": "TI-0012",
+          "nome": "Câmera compacta",
+          "categoria": "camera",
+          "situacao": "disponivel",
+          "busca": "compact camera on table",
+          "source": "pixabay",
+          "photoId": 6917213,
+          "sourcePage": "https://pixabay.com/photos/camera-photography-kodak-6917213/",
+          "photographer": "Anilsharma26",
+          "photographerProfile": "https://pixabay.com/users/Anilsharma26-13475484/",
+          "license": "Pixabay Content License",
+          "licenseUrl": "https://pixabay.com/service/terms/",
+          "queryUsed": "compact camera dark",
+          "retrievedAt": "2026-11-05T22:53:21.942Z",
+          "width": 800,
+          "height": 600,
+          "imageSha256": "031918fe83f7f3c23dcfb80cfdd459d804428ec6e34bac094e10b244104610d6",
+          "transformation": {
+            "kind": "crop",
+            "canvas": {
+              "width": 800,
+              "height": 600
+            },
+            "region": {
+              "left": 310,
+              "top": 169,
+              "width": 163,
+              "height": 153
+            },
+            "baseImageSha256": "9aebb4007248a09339aba1efcf773f0082d49c8c5299bab6fccfba7724086917"
+          },
+          "bucket": "equipamentos",
+          "storageKey": "suporte_ti/TI-0012.jpg",
+          "credit": "Fotos: Pixabay",
+          "creditUrl": "https://pixabay.com/",
+          "review": {
+            "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+            "reviewedAt": "2026-11-05T22:58:35.045Z",
+            "notes": "Parte frontal de câmera compacta, lente retrátil fechada, flash e corpo prateado reconhecíveis. Recorte exclui mão e marca da parte esquerda. No JPEG final as inscrições da lente não são legíveis; não há pessoa ou texto legível. Nenhum conteúdo foi retocado."
+          }
+        }
+      ],
+      "rejected": [
+        {
+          "patrimonio": "TI-0001",
+          "photoId": 7188564,
+          "imageSha256": "179a147926ab1a4a72b68b3551afdf24fa7519a7a998ada5448016c58b59bb43",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Mostra xícara e caderno; não representa um notebook."
+        },
+        {
+          "patrimonio": "TI-0002",
+          "photoId": 1853259,
+          "imageSha256": "d67327ac45d05b08e99336025e1eaa6528212f7d50ee92d5eab57435e401839e",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Logo da Apple legível na tampa."
+        },
+        {
+          "patrimonio": "TI-0003",
+          "photoId": 886462,
+          "imageSha256": "54968cd57d9c1045c5771ad34d0179db6dadd3429a637e659dfb3ae26ed29dcc",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Texto das teclas e logo do Windows legíveis; enquadramento de teclado."
+        },
+        {
+          "patrimonio": "TI-0004",
+          "photoId": 594090,
+          "imageSha256": "09802a12f81929ffb8bb624e747915ad5f811dbfb6283336f87b3fbca37818c0",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Pessoas e mãos na cena."
+        },
+        {
+          "patrimonio": "TI-0005",
+          "photoId": 4532323,
+          "imageSha256": "e9145b6c2f66a869ea850e8f76fb115d221bedaad6ebad035eed9c8289c8b18c",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Logo da Apple legível no equipamento."
+        },
+        {
+          "patrimonio": "TI-0006",
+          "photoId": 1868496,
+          "imageSha256": "792d598d5d942ecce35c85462fe4fab5ee63830263c8bed3e7c2219d2a28faa7",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Logo da Apple legível na frente do equipamento."
+        },
+        {
+          "patrimonio": "TI-0007",
+          "photoId": 6801334,
+          "imageSha256": "dec9fab3d6e75a9a13b025ece06b7a37b759af78ff256cfd023b9afa20132486",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Smartphone e tablet sobre notebook; não representa monitor independente."
+        },
+        {
+          "patrimonio": "TI-0008",
+          "photoId": 2202226,
+          "imageSha256": "6cca33633ae5d46708276fff336dc86d650780a8e36e536ae57596bc6baf61a7",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Inscrição HDMI legível no conector."
+        },
+        {
+          "patrimonio": "TI-0009",
+          "photoId": 4875319,
+          "imageSha256": "cea91d90ab78a9927f67bb8f0a1e084c634c18b21b733f9feecbdb6f62db1b8b",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Conjunto de conectores USB-A, mini-USB e outros; não representa cabo USB-C."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 1155173,
+          "imageSha256": "aee4e5fbd36b2a3c49b4577c20a1c60b3e391f711a67ed56d57655b8045c4160",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Notebook com marcas Lenovo/ThinkPad e texto legíveis; não é webcam externa."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 2364849,
+          "imageSha256": "afe3f11c0822328287b8ca61f6672dea674be96532bd06b8a68402ead501ed9c",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:17:15.935Z",
+          "reason": "Pessoa em primeiro plano e texto/marca da câmera legíveis."
+        },
+        {
+          "patrimonio": "TI-0001",
+          "photoId": 5673901,
+          "imageSha256": "55262c4d76ff575cfa8976fa4893c5589351c9e618e47b3edd4d2a3a69c7c9f2",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:29:26.913Z",
+          "reason": "Conteúdo colorido na tela e letras legíveis nas teclas."
+        },
+        {
+          "patrimonio": "TI-0002",
+          "photoId": 2838921,
+          "imageSha256": "ad0ecdef942daf44d9494ff2b07d0e330e674ae3b77492720fbcd2d83659bfb5",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:29:26.915Z",
+          "reason": "Mãos e braços de pessoa na cena, com reflexo na tela."
+        },
+        {
+          "patrimonio": "TI-0003",
+          "photoId": 593327,
+          "imageSha256": "796a58f26f89a9429be2a61daf93883204b15e33905e74f1f65419849006dd25",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:29:26.915Z",
+          "reason": "Texto e marca legíveis na caneta ao lado do notebook."
+        },
+        {
+          "patrimonio": "TI-0005",
+          "photoId": 1867761,
+          "imageSha256": "8f6f4a4cae5d21eecc8af462dcb59bec406a082ac4fb9bb9ab64062b161bb8c6",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:29:26.916Z",
+          "reason": "Relógio com números na tela e logo Dell legível no monitor."
+        },
+        {
+          "patrimonio": "TI-0006",
+          "photoId": 820390,
+          "imageSha256": "309d586900a54638fc446d6122b625c8756c0692f52d8ebf7618e981be93d9db",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:29:26.916Z",
+          "reason": "Logo Apple legível e conteúdo de edição de imagem na tela."
+        },
+        {
+          "patrimonio": "TI-0008",
+          "photoId": 5407447,
+          "imageSha256": "509fe3bcf9de76ecf6371ed9532dfaa36405ff238059780344c2de460b598cea",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:29:26.916Z",
+          "reason": "Texto Wireless Display Dongle legível; é adaptador, não cabo HDMI."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 835470,
+          "imageSha256": "3874ad2414c5fa1a4b3297d580f3e78393959e9d3281ae8f289c7e38129e54a0",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:29:26.917Z",
+          "reason": "Pessoa em videochamada, conteúdo na tela e textos/marcas legíveis; não representa webcam externa."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 3545828,
+          "imageSha256": "eeddcb331b4884b9c02d0889e25910dd6a12529df7ca1abb169d742bdb228173",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:29:26.917Z",
+          "reason": "Marca Pentax e inscrições da câmera legíveis."
+        },
+        {
+          "patrimonio": "TI-0001",
+          "photoId": 6856557,
+          "imageSha256": "200ed0cc423df619ee52ff42682ebe16126261e4581ea80c3ab6b7d891b7ec10",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:32:22.626Z",
+          "reason": "Inscrições visíveis nas teclas na região direita do teclado."
+        },
+        {
+          "patrimonio": "TI-0001",
+          "photoId": 4840790,
+          "imageSha256": "9c50a807b77fa0e4d8fecbb1e022ad48ab0230d9c761d6c976e1c10b2b6d5d0b",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:32:22.629Z",
+          "reason": "Texto legível nos controles da câmera em primeiro plano; notebook desfocado."
+        },
+        {
+          "patrimonio": "TI-0005",
+          "photoId": 5519649,
+          "imageSha256": "ebb18c8f967c4b89bb0532ae67e89addb992b0953db3c3db7e5492890dc0ed45",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:32:22.629Z",
+          "reason": "Composição de mockups com conteúdo colorido nas telas, não uma foto isolada do equipamento solicitado."
+        },
+        {
+          "patrimonio": "TI-0005",
+          "photoId": 6628144,
+          "imageSha256": "d5045f9f52f7da6bfc59603271bf24ddf0dee3916044dbfb07485525c5319b69",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:32:22.63Z",
+          "reason": "Ilustração de monitor com balão na tela; não representa uma foto do equipamento."
+        },
+        {
+          "patrimonio": "TI-0008",
+          "photoId": 2358959,
+          "imageSha256": "2838676ae4f52408d35ee99a2f7cb3acf03823af71fc8869e47dfef962237c02",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:32:22.63Z",
+          "reason": "Inscrições USB/HDMI legíveis; mostra portas de notebook em vez de cabo HDMI."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 1219748,
+          "imageSha256": "8a15ab09d732e3b4874ba103ce94602ad898d8a60d560966f48b4b7ca908a90f",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:32:22.63Z",
+          "reason": "Inscrições de resolução e distância focal legíveis na lente."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 796227,
+          "imageSha256": "87d87db6605e2b25aec7020dbe335f646281508557ad9a4bcc07a944ffed3619",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:32:22.63Z",
+          "reason": "Inscrição WEB CAMERA e especificações legíveis na lente."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 551287,
+          "imageSha256": "0c6b2f7ec32b923a4c9f08a762490aecc9a52490366d50035bc687eda9a9d7b3",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:32:22.63Z",
+          "reason": "Textos MENU, DISP., RING FUNC. e outros controles legíveis."
+        },
+        {
+          "patrimonio": "TI-0002",
+          "photoId": 1330162,
+          "imageSha256": "341e9b7fee619079117f0391d73cf3751b17956438eb3996cca0c319e916bc68",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:37:34.147Z",
+          "reason": "Tela com Google e textos de navegação; inscrições MacBook Pro e das teclas legíveis."
+        },
+        {
+          "patrimonio": "TI-0003",
+          "photoId": 5109166,
+          "imageSha256": "82c315d006b7d1fea209e3764e73026c351be937058d80002c6b8a14249607ff",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:37:34.147Z",
+          "reason": "Logo Apple identificável na tampa."
+        },
+        {
+          "patrimonio": "TI-0008",
+          "photoId": 1831,
+          "imageSha256": "d5095c4970854ca423a7e0651de40601c44fd42a93d7e992540d1390e8aa4a13",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:37:34.148Z",
+          "reason": "Inscrição HDMI legível no corpo do conector."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 4607652,
+          "imageSha256": "c8bd6157989b91e1770d5882042a706e9c462398c5aaebd607c056aa0e32eae3",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:37:34.149Z",
+          "reason": "Inscrição HD 1080p legível na frente da câmera."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 1163880,
+          "imageSha256": "ef9ba152e291f4fb9c942e587049be86b81a167e8ee2a14638e4c27e66bd8507",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:37:34.149Z",
+          "reason": "Selo de marca na lente; equipamento de videoconferência em vez de webcam externa individual."
+        },
+        {
+          "patrimonio": "TI-0006",
+          "photoId": 820277,
+          "imageSha256": "d966e0b92c8a2d159911be3ec2cc7a078099b0f4702db473e12cabf116042b3d",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:37:34.149Z",
+          "reason": "Logos Apple e Beats e marca harman/kardon legíveis."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 5309390,
+          "imageSha256": "57b5b58b7908ce2750ef20af951ffefdbaca348a3c605c09fc6bb721b3ba9728",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:37:34.149Z",
+          "reason": "Marca Olympus, modelo e inscrições da lente legíveis; câmera com flash externo."
+        },
+        {
+          "patrimonio": "TI-0001",
+          "photoId": 2982270,
+          "imageSha256": "d999c9d013ba57f10e5cb7d10f8f51e935dcfd61f09ad1cdf567049926945894",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:41:38.784Z",
+          "reason": "Teclas com letras legíveis e marca Nikon na câmera ao lado."
+        },
+        {
+          "patrimonio": "TI-0001",
+          "photoId": 4484282,
+          "imageSha256": "12ba251bf43a6b513fd0a731ddab7213d3e995c3de09b91b20db91e5e79acd6c",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:41:38.797Z",
+          "reason": "Texto KEEP IT SIMPLE no bloco e canetas, inscrições nas teclas e logo Apple no mouse."
+        },
+        {
+          "patrimonio": "TI-0003",
+          "photoId": 599475,
+          "imageSha256": "fc2472512c7706164c7acec2e4f8631506a3c2f6f089b9f1c4c320a1f37ed7c1",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:41:38.798Z",
+          "reason": "Letras e números legíveis nas teclas e inscrição na moldura da tela."
+        },
+        {
+          "patrimonio": "TI-0006",
+          "photoId": 1140699,
+          "imageSha256": "542db0f4471f65f031955d17a4b2f18cd2f7d1b3272aa792b0f734adf1dd29ff",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:41:38.799Z",
+          "reason": "Logo Apple identificável na borda do monitor e letras legíveis no teclado."
+        },
+        {
+          "patrimonio": "TI-0006",
+          "photoId": 2170392,
+          "imageSha256": "2c3113ab365a270fc7c7bc0fc4a046bdea76b0860b0ae22f9fccc02a2fd20364",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:41:38.8Z",
+          "reason": "Tela com apresentação e texto CLIMB TO SUCCESS."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 3271512,
+          "imageSha256": "7c5a37ae88bf83f06e9555bae37a4dafab8852d7e3d6858328dafa4aa778bde9",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:41:38.8Z",
+          "reason": "Ilustração de smartphones com conteúdo nas telas e logos; não representa webcam."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 3990861,
+          "imageSha256": "f9217cb674de9eb40c3313d7066e4d6bb19ec005a720a402958d87cc535249c7",
+          "reviewer": "Codex — inspeção visual local em 800×600",
+          "reviewedAt": "2026-11-05T13:41:38.801Z",
+          "reason": "Marca ZEISS e várias inscrições da lente legíveis."
+        },
+        {
+          "patrimonio": "TI-0004",
+          "photoId": 3737334,
+          "imageSha256": "771c2a8992a17046343dd4772745ff663d19ce788062bf1419b34fc52531db15",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Marca Primebook, selo Intel e texto das teclas legíveis."
+        },
+        {
+          "patrimonio": "TI-0004",
+          "photoId": 958882,
+          "imageSha256": "041b6527664e208f3c1d71854c9b9ebe3a268b3efcec775d705cc1ba7d78d057",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Foto integral tem mão e logo Apple na tampa."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 8594571,
+          "imageSha256": "3b77d7f02522f94e90a0ee4a739deef89f59403e30119a086496566c5a399e3b",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Representa smartphone com porta USB-C, não webcam."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 2179058,
+          "imageSha256": "e49926222a98b55e78526c420f52e62511e24d0a5fc713f9029eacde091fb3af",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Mostra mão e lentes avulsas com texto; não câmera compacta."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 6759179,
+          "imageSha256": "925645a9221df2d1754da98c449a47b46d3e93859ab0d1f94e38ed2e2e5fdcff",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Câmera com lente intercambiável e texto legível nos controles e lente."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 6917213,
+          "imageSha256": "9aebb4007248a09339aba1efcf773f0082d49c8c5299bab6fccfba7724086917",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Foto integral tem mão, marca Kodak e parte da lente com inscrições."
+        },
+        {
+          "patrimonio": "TI-0004",
+          "photoId": 3174729,
+          "imageSha256": "285f3d87afb974774e7b5f4957ceb4c79841a63da109be65eb2b3fd14a7ed2fc",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Imagem composta com interfaces e texto de tela; não foto de notebook com tela vazia."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 1362419,
+          "imageSha256": "ad953e8d53b85aa9e7a72e5aaff4410a241973b2ce136d6e48a156657c82c7e8",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Marca Fujifilm e inscrições legíveis; câmera com lente intercambiável."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 819359,
+          "imageSha256": "bb8eaf218517a518c78c0bfa7c07626e387d23a3e9443c33f453bd9ce8f46ea6",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Marca Canon e inscrições da lente legíveis; câmera não compacta."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 1163878,
+          "imageSha256": "fdbfb4c06b9aebbfd181d8c68355b81857320b6b50feb560436227ab099c0868",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Marca Hikvision legível; câmera de vigilância, não webcam."
+        },
+        {
+          "patrimonio": "TI-0007",
+          "photoId": 820277,
+          "imageSha256": "d966e0b92c8a2d159911be3ec2cc7a078099b0f4702db473e12cabf116042b3d",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Integral tem logo Apple, Beats, marca na caixa de som e teclado com texto."
+        },
+        {
+          "patrimonio": "TI-0011",
+          "photoId": 4607652,
+          "variant": "crop-c2857ed805fe85ce",
+          "imageSha256": "80340fa53ae6bb585f90bf47df1c28436b27489fdc5ab8b66b1ec856b8c86802",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Recorte fechado demais na lente; deixa de representar a webcam reconhecível."
+        },
+        {
+          "patrimonio": "TI-0012",
+          "photoId": 551287,
+          "variant": "crop-620f0c5d93879755",
+          "imageSha256": "cd5093b7cb11dfd305b2f9275906b07172fe9c028ebf7ead38eefddc84c34393",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Recorte remove os controles e deixa quase somente LCD; câmera não fica reconhecível."
+        },
+        {
+          "patrimonio": "TI-0007",
+          "photoId": 820277,
+          "variant": "crop-fa4995b33cf30cc8",
+          "imageSha256": "552b44f019f53825bbb765518266b602a130a4771e2bba976ba47f68d587bb06",
+          "reviewer": "Codex — inspeção visual local do arquivo final 800×600",
+          "reviewedAt": "2026-11-05T22:58:35.045Z",
+          "reason": "Recorte termina antes da borda inferior da tela. Preferido novo enquadramento com a borda completa, ainda sem logo."
+        }
+      ]
+    }
+  },
+  "recoveredBuild": {
+    "exitCode": 1,
+    "output": "> emprest-ti@0.1.0 build\r\n> node ./node_modules/next/dist/bin/next build --webpack\r\n\r\n▲ Next.js 16.4.5 (webpack)\r\n- Environments: .env\r\n✓ Running next.config.ts took 311ms\r\n\r\n\r\n> Build error occurred\r\nSyntaxError: Unexpected token '\u0000', \"\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\"... is not valid JSON\r\n    at JSON.parse (<anonymous>)",
+    "resolution": "Preservado o diretório .next com diagnostics/build-diagnostics.json inválido e repetido o build em diretório limpo, sem mudança de fonte."
+  }
+}

@@ -33,4 +33,4 @@ Também foram recusados três recortes: 4607652 fechado demais na lente; 551287 
 
 O pacote é preparado localmente. O usuário extrai o ZIP e envia somente os JPEG ao bucket público `equipamentos`, com objetos `suporte_ti/TI-0001.jpg` a `suporte_ti/TI-0012.jpg`. Repetir o envio substituindo os mesmos nomes. Conferir cada URL pública sem autenticação. O manifesto é documentação de origem e não precisa ser publicado no bucket.
 
-Não houve alteração de `.env`, Vercel, banco ou Storage remoto. A chave do Pixabay permanece no arquivo local ignorado. A publicação humana é um passo separado e não foi declarada realizada. Antes da entrega 4, este lote precisa do veredito da auditoria independente.
+O verificador examinou os 12 anexos e deu o veredito **PRONTA** para a revisão `09bf0ed`. O relatório `2026-11-05T23-15-45.597Z-09bf0ed3.md` registra os cinco critérios atendidos. A publicação no Storage permanece manual.
