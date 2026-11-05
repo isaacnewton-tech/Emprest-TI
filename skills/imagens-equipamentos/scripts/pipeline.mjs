@@ -140,8 +140,38 @@ export async function previewPhoto(equipment, photoId, { root, fetcher = fetch }
   return selection;
 }
 
+function cropRegion(value) {
+  const keys = ["left", "top", "width", "height"];
+  if (!value || Object.keys(value).length !== 4 || !keys.every((key) => Number.isSafeInteger(value[key])) || value.left < 0 || value.top < 0 || value.width < 1 || value.height < 1 || value.left + value.width > 800 || value.top + value.height > 600) throw new Error("Recorte inválido: informe left, top, width e height dentro de 800×600.");
+  return Object.fromEntries(keys.map((key) => [key, value[key]]));
+}
+
+const cropVariant = (region) => `crop-${sha256(JSON.stringify(region)).slice(0, 16)}`;
+const cropBytes = (base, region) => sharp(base).extract(region).resize(800, 600, { fit: "contain", background: "#ffffff" }).jpeg({ quality: 88, mozjpeg: true }).toBuffer();
+
+async function cropBase(root, patrimonio, photoId) {
+  const selection = readJson(path.join(root, ".image-work", "selections", `${patrimonio}-${photoId}.json`));
+  const bytes = readFileSync(path.join(root, ".image-work", "candidates", `${photoId}.jpg`));
+  const metadata = await sharp(bytes).metadata();
+  if (selection.variant || selection.crop || selection.patrimonio !== patrimonio || selection.photo?.id !== photoId || !photoRecord(selection.photo) || sha256(bytes) !== selection.imageSha256 || metadata.width !== 800 || metadata.height !== 600 || metadata.format !== "jpeg") throw new Error("A prévia original foi alterada ou não tem origem válida.");
+  return { selection, bytes };
+}
+
+export async function cropPhoto(equipment, photoId, rectangle, { root } = {}) {
+  if (!/^TI-\d{4}$/.test(equipment.patrimonio) || !Number.isSafeInteger(photoId) || photoId < 1) throw new Error("Patrimônio ou ID inválido.");
+  const crop = cropRegion(rectangle);
+  const variant = cropVariant(crop);
+  const base = await cropBase(root, equipment.patrimonio, photoId);
+  const bytes = await cropBytes(base.bytes, crop);
+  const candidateFile = `.image-work/candidates/${photoId}-${variant}.jpg`;
+  const selection = { ...base.selection, variant, crop, baseImageSha256: base.selection.imageSha256, imageSha256: sha256(bytes), candidateFile };
+  writeStable(path.join(root, candidateFile), bytes);
+  json(path.join(root, ".image-work", "selections", `${equipment.patrimonio}-${photoId}-${variant}.json`), selection);
+  return selection;
+}
+
 export function validateReview(review, selection, actualHash) {
-  if (!review || review.patrimonio !== selection.patrimonio || review.photoId !== selection.photo.id || review.imageSha256 !== actualHash || selection.imageSha256 !== actualHash) throw new Error("Revisão ausente ou vinculada a outra imagem/hash.");
+  if (!review || review.patrimonio !== selection.patrimonio || review.photoId !== selection.photo.id || (review.variant ?? null) !== (selection.variant ?? null) || review.imageSha256 !== actualHash || selection.imageSha256 !== actualHash) throw new Error("Revisão ausente ou vinculada a outra imagem/hash/variante.");
   if (!visualChecks.every((field) => review[field] === true)) throw new Error("A imagem não tem todas as condições visuais aprovadas.");
   if (typeof review.reviewer !== "string" || !review.reviewer.trim() || typeof review.notes !== "string" || !review.notes.trim() || typeof review.reviewedAt !== "string" || !Number.isFinite(Date.parse(review.reviewedAt))) throw new Error("A revisão precisa de responsável, data e observações.");
 }
@@ -162,22 +192,31 @@ async function validateBatch(equipments, root) {
     if (matches.length !== 1) throw new Error("Cada patrimônio precisa de exatamente uma revisão.");
     const review = matches[0];
     if (!Number.isSafeInteger(review.photoId) || review.photoId < 1) throw new Error("ID de foto inválido na revisão.");
-    const selectionFile = path.join(root, ".image-work", "selections", `${equipment.patrimonio}-${review.photoId}.json`);
+    if (review.variant !== undefined && !/^crop-[a-f0-9]{16}$/.test(review.variant)) throw new Error("Variante de recorte inválida.");
+    const suffix = review.variant ? `-${review.variant}` : "";
+    const selectionFile = path.join(root, ".image-work", "selections", `${equipment.patrimonio}-${review.photoId}${suffix}.json`);
     if (!existsSync(selectionFile)) throw new Error("Seleção não encontrada entre as prévias preparadas.");
     const selection = readJson(selectionFile);
     const photo = photoRecord(selection.photo);
     if (!photo) throw new Error("Seleção sem proveniência válida do Pixabay.");
-    const bytes = readFileSync(path.join(root, ".image-work", "candidates", `${photo.id}.jpg`));
+    const bytes = readFileSync(path.join(root, ".image-work", "candidates", `${photo.id}${suffix}.jpg`));
     const hash = sha256(bytes);
     validateReview(review, selection, hash);
-    if (rejected.some((entry) => entry.patrimonio === equipment.patrimonio && (entry.photoId === photo.id || entry.imageSha256 === hash))) throw new Error("A foto aprovada também consta como reprovada para este equipamento.");
+    let transformation = { kind: "whole" };
+    if (selection.variant) {
+      const crop = cropRegion(selection.crop);
+      const base = await cropBase(root, equipment.patrimonio, photo.id);
+      if (selection.variant !== cropVariant(crop) || selection.baseImageSha256 !== base.selection.imageSha256 || JSON.stringify(selection.photo) !== JSON.stringify(base.selection.photo) || selection.query !== base.selection.query || selection.retrievedAt !== base.selection.retrievedAt || sha256(await cropBytes(base.bytes, crop)) !== hash) throw new Error("O recorte não corresponde à origem e à geometria registradas; retoques não são permitidos.");
+      transformation = { kind: "crop", canvas: { width: 800, height: 600 }, region: crop, baseImageSha256: selection.baseImageSha256 };
+    } else if (selection.crop || selection.baseImageSha256) throw new Error("Recorte sem variante válida.");
+    if (rejected.some((entry) => entry.patrimonio === equipment.patrimonio && (/^[a-f0-9]{64}$/.test(entry.imageSha256 ?? "") ? entry.imageSha256 === hash : entry.photoId === photo.id))) throw new Error("A foto aprovada também consta como reprovada para este equipamento.");
     const metadata = await sharp(bytes).metadata();
     if (metadata.width !== 800 || metadata.height !== 600 || metadata.format !== "jpeg") throw new Error("Dimensões ou formato alterados após a revisão.");
     if (ids.has(photo.id) || hashes.has(hash)) throw new Error("Uma mesma foto não pode ser usada em dois equipamentos.");
     ids.add(photo.id); hashes.add(hash);
     const storageKey = `suporte_ti/${equipment.patrimonio}.jpg`;
     files.push({ name: storageKey, bytes });
-    records.push({ ...equipment, source: "pixabay", photoId: photo.id, sourcePage: photo.pageURL, photographer: photo.user, photographerProfile: `https://pixabay.com/users/${encodeURIComponent(photo.user)}-${photo.user_id}/`, license: "Pixabay Content License", licenseUrl: "https://pixabay.com/service/terms/", queryUsed: selection.query, retrievedAt: selection.retrievedAt, width: 800, height: 600, imageSha256: hash, bucket: "equipamentos", storageKey, credit: "Fotos: Pixabay", creditUrl: "https://pixabay.com/", review: { reviewer: review.reviewer, reviewedAt: review.reviewedAt, notes: review.notes } });
+    records.push({ ...equipment, source: "pixabay", photoId: photo.id, sourcePage: photo.pageURL, photographer: photo.user, photographerProfile: `https://pixabay.com/users/${encodeURIComponent(photo.user)}-${photo.user_id}/`, license: "Pixabay Content License", licenseUrl: "https://pixabay.com/service/terms/", queryUsed: selection.query, retrievedAt: selection.retrievedAt, width: 800, height: 600, imageSha256: hash, transformation, bucket: "equipamentos", storageKey, credit: "Fotos: Pixabay", creditUrl: "https://pixabay.com/", review: { reviewer: review.reviewer, reviewedAt: review.reviewedAt, notes: review.notes } });
   }
   return { files, records, manifest: Buffer.from(`${JSON.stringify({ source: "pixabay", equipmentCount: 12, images: records, rejected }, null, 2)}\n`) };
 }

@@ -23,6 +23,8 @@ Buscar consulta os termos da lista, com cache de 24 horas. Previa só aceita ID 
 
 Reprovar pessoas, marca/logo legível, texto, tela com conteúdo ou categoria errada. Não transformar safesearch em aprovação visual. Registrar cada reprovação com motivo; procurar outro candidato do próprio Pixabay. Não fabricar aprovações para fechar os 12 itens.
 
+O usuário autorizou recortes geométricos, mantendo o equipamento reconhecível. Usar `recortar TI-0001 ID left top width height`, com coordenadas sobre a prévia integral 800×600. A variante fica em outro arquivo e exige nova inspeção e revisão vinculada ao seu hash e `variant`. Preservar o original e suas reprovações. Nunca gerar, retocar, apagar ou desfocar conteúdo. O export recalcula os bytes pela origem e geometria para bloquear retoques.
+
 Preparar só libera o conjunto completo com revisões válidas, JPEG 800×600, IDs e hashes únicos. Resultados ficam em `.image-work/export/`, com manifesto de origem, licença e nomes estáveis. Nenhum resultado com revisão pendente é foto pronta para o seed.
 
 ## Chave e publicação

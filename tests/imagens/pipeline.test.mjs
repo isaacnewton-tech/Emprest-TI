@@ -3,13 +3,13 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, statSync
 import { tmpdir } from "node:os";
 import path from "node:path";
 import sharp from "sharp";
-import { assertPixabayUrl, getBytes, normalizePhoto, prepareExport, previewPhoto, searchEquipment, sha256, validateReview } from "../../skills/imagens-equipamentos/scripts/pipeline.mjs";
+import { assertPixabayUrl, cropPhoto, getBytes, normalizePhoto, prepareExport, previewPhoto, searchEquipment, sha256, validateReview } from "../../skills/imagens-equipamentos/scripts/pipeline.mjs";
 
 const equipments = JSON.parse(readFileSync(new URL("../../skills/imagens-equipamentos/assets/equipamentos.json", import.meta.url), "utf8"));
 const rootFixture = () => mkdtempSync(path.join(tmpdir(), "empresti-imagens-teste-"));
 const writeJson = (file, value) => { mkdirSync(path.dirname(file), { recursive: true }); writeFileSync(file, JSON.stringify(value)); };
 const photo = (id = 1001) => ({ id, type: "photo", pageURL: `https://pixabay.com/photos/item-${id}/`, largeImageURL: `https://cdn.pixabay.com/photo/${id}.jpg`, user: "Autor da fixture", user_id: 42, imageWidth: 1000, imageHeight: 800 });
-const approval = (selection) => ({ patrimonio: selection.patrimonio, photoId: selection.photo.id, imageSha256: selection.imageSha256, reviewer: "Fixture de teste, não revisão de catálogo", reviewedAt: "2026-11-05T12:00:00.000Z", notes: "Dados sintéticos somente para testar as validações.", noPeople: true, noReadableBrands: true, noText: true, noScreenContent: true, correctEquipment: true });
+const approval = (selection) => ({ patrimonio: selection.patrimonio, photoId: selection.photo.id, variant: selection.variant, imageSha256: selection.imageSha256, reviewer: "Fixture de teste, não revisão de catálogo", reviewedAt: "2026-11-05T12:00:00.000Z", notes: "Dados sintéticos somente para testar as validações.", noPeople: true, noReadableBrands: true, noText: true, noScreenContent: true, correctEquipment: true });
 
 async function preparedFixture() {
   const root = rootFixture();
@@ -168,6 +168,62 @@ describe("Preparação de imagens pela API do Pixabay", () => {
     writeJson(path.join(root, ".image-work/revisoes.json"), { approved, rejected: [{ ...approved[0], reason: "Texto legível na foto." }] });
     await expect(prepareExport(equipments, { root })).rejects.toThrow("também consta como reprovada");
     expect(existsSync(path.join(root, ".image-work/export"))).toBe(false);
+  }, 20000);
+
+  it("test_ca_02_ca_03_recorte_preserva_original_exige_revisao_nova_e_geometria_valida", async () => {
+    const { root, approved } = await preparedFixture();
+    const basePath = path.join(root, ".image-work/candidates/1001.jpg");
+    const base = readFileSync(basePath);
+    const region = { left: 20, top: 40, width: 500, height: 400 };
+    const selection = await cropPhoto(equipments[0], 1001, region, { root });
+    const candidate = path.join(root, selection.candidateFile);
+    const modified = statSync(candidate).mtimeMs;
+    expect(readFileSync(basePath).equals(base)).toBe(true);
+    expect(selection.baseImageSha256).toBe(sha256(base));
+    expect((await sharp(candidate).metadata()).width).toBe(800);
+    expect((await sharp(candidate).metadata()).height).toBe(600);
+    await cropPhoto(equipments[0], 1001, region, { root });
+    expect(statSync(candidate).mtimeMs).toBe(modified);
+    expect(() => validateReview(approved[0], selection, selection.imageSha256)).toThrow("outra imagem");
+    expect(() => validateReview({ ...approval(selection), variant: undefined }, selection, selection.imageSha256)).toThrow();
+    const before = readdirSync(path.dirname(candidate));
+    for (const invalid of [{ ...region, left: -1 }, { ...region, width: 801 }, { ...region, top: 300 }, { ...region, height: 0 }, { ...region, left: 0.5 }, { ...region, blur: true }]) {
+      await expect(cropPhoto(equipments[0], 1001, invalid, { root })).rejects.toThrow("Recorte inválido");
+    }
+    expect(readdirSync(path.dirname(candidate))).toEqual(before);
+  }, 20000);
+
+  it("test_ca_03_ca_04_export_recalcula_recorte_e_preserva_reprovacao_do_original", async () => {
+    const { root, approved } = await preparedFixture();
+    const originalReview = { ...approved[0], reason: "Reprovação da fixture original." };
+    const selection = await cropPhoto(equipments[0], 1001, { left: 10, top: 20, width: 600, height: 400 }, { root });
+    approved[0] = approval(selection);
+    const reviewPath = path.join(root, ".image-work/revisoes.json");
+    writeJson(reviewPath, { approved, rejected: [originalReview] });
+    const result = await prepareExport(equipments, { root });
+    expect(result.records[0].transformation).toEqual({ kind: "crop", canvas: { width: 800, height: 600 }, region: selection.crop, baseImageSha256: originalReview.imageSha256 });
+    expect(JSON.parse(readFileSync(path.join(result.exportDirectory, "manifest.json"))).rejected).toEqual([originalReview]);
+    writeJson(reviewPath, { approved, rejected: [{ patrimonio: "TI-0001", photoId: 1001, reason: "Bloqueio sem hash." }] });
+    await expect(prepareExport(equipments, { root })).rejects.toThrow("também consta como reprovada");
+    const altered = await sharp({ create: { width: 800, height: 600, channels: 3, background: "white" } }).jpeg().toBuffer();
+    writeFileSync(path.join(root, selection.candidateFile), altered);
+    selection.imageSha256 = sha256(altered);
+    approved[0].imageSha256 = selection.imageSha256;
+    writeJson(path.join(root, `.image-work/selections/TI-0001-1001-${selection.variant}.json`), selection);
+    writeJson(reviewPath, { approved, rejected: [originalReview] });
+    await expect(prepareExport(equipments, { root })).rejects.toThrow("retoques não são permitidos");
+    expect(existsSync(result.exportDirectory)).toBe(false);
+  }, 20000);
+
+  it("test_ca_02_recortes_diferentes_nao_permitem_reusar_o_mesmo_id_em_dois_itens", async () => {
+    const { root, approved } = await preparedFixture();
+    const first = JSON.parse(readFileSync(path.join(root, ".image-work/selections/TI-0001-1001.json")));
+    writeJson(path.join(root, ".image-work/selections/TI-0002-1001.json"), { ...first, patrimonio: "TI-0002" });
+    const a = await cropPhoto(equipments[0], 1001, { left: 0, top: 0, width: 700, height: 500 }, { root });
+    const b = await cropPhoto(equipments[1], 1001, { left: 50, top: 50, width: 500, height: 400 }, { root });
+    approved[0] = approval(a); approved[1] = approval(b);
+    writeJson(path.join(root, ".image-work/revisoes.json"), { approved });
+    await expect(prepareExport(equipments, { root })).rejects.toThrow("mesma foto");
   }, 20000);
 
   it("test_ca_05_revogacao_retira_export_anterior_e_preserva_copia_em_quarentena", async () => {

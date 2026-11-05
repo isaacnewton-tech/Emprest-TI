@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { prepareExport, previewPhoto, searchEquipment } from "./pipeline.mjs";
+import { cropPhoto, prepareExport, previewPhoto, searchEquipment } from "./pipeline.mjs";
 
 const asset = fileURLToPath(new URL("../assets/equipamentos.json", import.meta.url));
 const equipments = JSON.parse(readFileSync(asset, "utf8"));
@@ -27,6 +27,14 @@ async function main() {
     console.log(JSON.stringify({ patrimonio, photoId: id, file: selection.candidateFile, imageSha256: selection.imageSha256 }));
     return;
   }
+  if (command === "recortar") {
+    const item = equipments.find((entry) => entry.patrimonio === patrimonio);
+    const [id, left, top, width, height] = queryParts.map(Number);
+    if (!item || queryParts.length !== 5) throw new Error("Use recortar TI-0001 ID left top width height.");
+    const selection = await cropPhoto(item, id, { left, top, width, height }, { root });
+    console.log(JSON.stringify({ patrimonio, photoId: id, variant: selection.variant, file: selection.candidateFile, imageSha256: selection.imageSha256, requiresNewReview: true }));
+    return;
+  }
   if (command === "preparar" && !patrimonio) {
     const result = await prepareExport(equipments, { root });
     console.log(`${result.records.length} fotos aprovadas em ${path.relative(root, result.exportDirectory)}. Upload é execução manual do usuário.`);
@@ -36,7 +44,7 @@ async function main() {
     console.log(JSON.stringify({ provider: "pixabay", keyConfigured: existsSync(path.join(root, ".local-secrets", "pixabay.key")), reviewPresent: existsSync(path.join(root, ".image-work", "revisoes.json")) }));
     return;
   }
-  throw new Error("Comandos: buscar [TI-0001] [termos alternativos], previa TI-0001 ID, preparar, estado. Não existe comando de upload.");
+  throw new Error("Comandos: buscar [TI-0001] [termos alternativos], previa TI-0001 ID, recortar TI-0001 ID left top width height, preparar, estado. Não existe comando de upload.");
 }
 
 main().catch((error) => {
