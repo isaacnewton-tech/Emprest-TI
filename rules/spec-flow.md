@@ -24,7 +24,9 @@ Ao iniciar qualquer funcionalidade nova do PRD.
   docs/specs/<NNN-nome>/spec.md --commits <base>..<fim> --checks
   <resultados-locais.json>`. O launcher cria um snapshot do commit,
   sem configuração local, e abre uma sessão independente somente
-  leitura, sem apps/plugins nem escalada de permissões.
+  leitura, sem shell, apps/plugins nem escalada de permissões. As
+  fontes versionadas são fornecidas por inteiro, com linhas, como
+  entrada da auditoria; não se herda a conversa do agente principal.
 - O agente principal executa os checks locais antes da auditoria e
   registra revisão, comando, código de saída e saída em JSON. Não
   marque uma spec pronta com resultados de outro commit.
