@@ -32,3 +32,9 @@ export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
   if (!user) throw new TRPCError({ code: "UNAUTHORIZED", message: "Entre na sua conta para continuar." });
   return next({ ctx: { ...ctx, user } });
 });
+
+export const tenantProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+  const membership = await ctx.getTenant(ctx.user.id);
+  if (!membership) throw new TRPCError({ code: "FORBIDDEN", message: "Sua conta precisa de um vínculo com o catálogo." });
+  return next({ ctx: { ...ctx, ...membership, db: ctx.getDatabase() } });
+});

@@ -10,7 +10,8 @@ import { sessionUnavailable } from "./unavailable";
 export async function guardSession(request: NextRequest) {
   let response = NextResponse.next({ request });
   noSessionCache(response.headers);
-  const protectedRoute = request.nextUrl.pathname === "/catalogo" || request.nextUrl.pathname.startsWith("/catalogo/");
+  const protectedRoute = request.nextUrl.pathname === "/catalogo" || request.nextUrl.pathname.startsWith("/catalogo/") ||
+    request.nextUrl.pathname === "/meus-emprestimos";
   const loginRoute = request.nextUrl.pathname === "/" || request.nextUrl.pathname === "/login";
   function withCookies(target: NextResponse) {
     for (const cookie of response.cookies.getAll()) target.cookies.set(cookie);

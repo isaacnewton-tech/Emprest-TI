@@ -5,4 +5,4 @@ export function proxy(request: NextRequest) {
   return guardSession(request);
 }
 
-export const config = { matcher: ["/", "/login", "/catalogo/:path*"] };
+export const config = { matcher: ["/", "/login", "/catalogo/:path*", "/meus-emprestimos"] };
