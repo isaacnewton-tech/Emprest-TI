@@ -1,0 +1,162 @@
+{
+  "revision": "b99a17d28281d7eda622e587449385708fe3def9",
+  "sourceFiles": [
+    ".env.example",
+    ".gitignore",
+    ".prettierrc.json",
+    "AGENTS.md",
+    "LICENSE",
+    "agents/verificador-spec.md",
+    "certs/supabase-ca.crt",
+    "docs/PRD.md",
+    "docs/adr/001-stack.md",
+    "docs/pratica/decisoes-e-andamento.md",
+    "docs/specs/005-dados-iniciais/plan.md",
+    "docs/specs/005-dados-iniciais/publicacao.md",
+    "docs/specs/005-dados-iniciais/spec.md",
+    "docs/specs/005-dados-iniciais/tasks.md",
+    "docs/verificacoes/005-dados-iniciais/validacao-local.md",
+    "entregas/02-imagens-equipamentos.zip",
+    "eslint.config.mjs",
+    "layout.md",
+    "next-env.d.ts",
+    "next.config.ts",
+    "package-lock.json",
+    "package.json",
+    "playwright.config.ts",
+    "postcss.config.mjs",
+    "prisma/migrations/20261106000031_dados_iniciais/migration.sql",
+    "prisma/migrations/migration_lock.toml",
+    "prisma/schema.prisma",
+    "prisma/seed.ts",
+    "rules/checks.md",
+    "rules/implementation.md",
+    "rules/migration.md",
+    "rules/operacao.md",
+    "rules/restrictions.md",
+    "rules/secrets.md",
+    "rules/spec-flow.md",
+    "rules/tests.md",
+    "scripts/verificar-spec.mjs",
+    "skills/frontend-design/LICENSE.txt",
+    "skills/frontend-design/SKILL.md",
+    "skills/frontend-design/agents/openai.yaml",
+    "skills/imagens-equipamentos/SKILL.md",
+    "skills/imagens-equipamentos/assets/equipamentos.json",
+    "skills/imagens-equipamentos/references/pixabay-e-revisao.md",
+    "skills/imagens-equipamentos/references/publicacao-manual.md",
+    "skills/imagens-equipamentos/scripts/imagens.mjs",
+    "skills/imagens-equipamentos/scripts/pipeline.mjs",
+    "skills/template/SKILL.md",
+    "skills/template/assets/.gitkeep",
+    "skills/template/references/.gitkeep",
+    "skills/template/scripts/.gitkeep",
+    "src/app/api/trpc/[trpc]/route.ts",
+    "src/app/catalogo/page.tsx",
+    "src/app/globals.css",
+    "src/app/layout.tsx",
+    "src/app/login/page.tsx",
+    "src/app/page.tsx",
+    "src/components/authenticated-area.tsx",
+    "src/components/login-screen.tsx",
+    "src/components/ui/button.tsx",
+    "src/components/ui/input.tsx",
+    "src/proxy.ts",
+    "src/server/api/context.ts",
+    "src/server/api/root.ts",
+    "src/server/api/routers/auth.ts",
+    "src/server/api/trpc.ts",
+    "src/server/auth/client.ts",
+    "src/server/auth/cookies.ts",
+    "src/server/auth/guard.ts",
+    "src/server/auth/unavailable.ts",
+    "src/server/env.ts",
+    "src/server/http/origin.ts",
+    "src/server/services/auth.ts",
+    "src/shared/auth.ts",
+    "src/trpc/react.tsx",
+    "tests/auth/guard.test.ts",
+    "tests/auth/login-screen.test.tsx",
+    "tests/auth/sdk.test.ts",
+    "tests/auth/service.test.ts",
+    "tests/auth/transport.test.ts",
+    "tests/dados-iniciais/migration.test.ts",
+    "tests/dados-iniciais/seed.test.ts",
+    "tests/e2e/auth.spec.ts",
+    "tests/e2e/dados-iniciais.spec.ts",
+    "tests/e2e/imagens.spec.ts",
+    "tests/e2e/verificador.spec.ts",
+    "tests/helpers/auth-context.ts",
+    "tests/helpers/auth-harness.ts",
+    "tests/helpers/auth-provider.ts",
+    "tests/helpers/postgres.ts",
+    "tests/helpers/seed-fixture.ts",
+    "tests/helpers/server-only.ts",
+    "tests/imagens/pipeline.test.mjs",
+    "tests/verificador/launcher.test.mjs",
+    "tsconfig.json",
+    "vitest.config.mjs"
+  ],
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "output": "> emprest-ti@0.1.0 test\r\n> node ./node_modules/vitest/vitest.mjs run\r\n\r\n\r\n RUN  v5.1.0 C:/Users/isaac/OneDrive - Instituto J&F/Área de Trabalho/3ANO/Inovação e Tecnologia/Grilo/Emprest-TI\r\n\r\n\r\n Test Files  9 passed (9)\r\n      Tests  53 passed (53)\r\n   Start at  21:17:21\r\n   Duration  54.79s (tests 83%, import 9%, transform 4%, environment 4%)"
+    },
+    {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "output": "> emprest-ti@0.1.0 lint\r\n> node ./node_modules/eslint/bin/eslint.js ."
+    },
+    {
+      "command": "npm run build -- --webpack",
+      "exitCode": 0,
+      "output": "> emprest-ti@0.1.0 build\r\n> npm run db:generate && node ./node_modules/next/dist/bin/next build --webpack\r\n\r\n\r\n> emprest-ti@0.1.0 db:generate\r\n> node ./node_modules/prisma/build/index.js generate\r\n\r\nEnvironment variables loaded from .env\r\nPrisma schema loaded from prisma\\schema.prisma\r\n\r\n✔ Generated Prisma Client (v6.19.3) to .\\node_modules\\@prisma\\client in 359ms\r\n\r\nStart by importing your Prisma Client (See: https://pris.ly/d/importing-client)\r\n\r\nTip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints\r\n\r\n▲ Next.js 16.4.5 (webpack)\r\n- Environments: .env\r\n✓ Running next.config.ts took 224ms\r\n\r\n  Creating an optimized production build ...\r\n✓ Compiled successfully in 20.5s\r\n  Running TypeScript ...\r\n  Finished TypeScript in 12.4s ...\r\n  Collecting page data using 7 workers ...\r\n  Generating static pages using 7 workers (0/5) ...\r\n  Generating static pages using 7 workers (1/5) \r\n  Generating static pages using 7 workers (2/5) \r\n  Generating static pages using 7 workers (3/5) \r\n✓ Generating static pages using 7 workers (5/5) in 4.0s\r\n  Finalizing page optimization ...\r\n  Collecting build traces ...\r\n\r\nRoute (app)\r\n┌ ○ /\r\n├ ○ /_not-found\r\n├ ƒ /api/trpc/[trpc]\r\n├ ○ /catalogo\r\n└ ○ /login\r\n\r\n\r\nƒ Proxy (Middleware)\r\n\r\n○  (Static)   prerendered as static content\r\nƒ  (Dynamic)  server-rendered on demand"
+    },
+    {
+      "command": "npm run test:e2e",
+      "exitCode": 0,
+      "output": "> emprest-ti@0.1.0 test:e2e\r\n> node ./node_modules/@playwright/test/cli.js test\r\n\r\n\r\nRunning 16 tests using 1 worker\r\n\r\n(node:9456) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\r\n(Use `node --trace-warnings ...` to show where the warning was created)\r\n  ok  1 tests\\e2e\\auth.spec.ts:24:1 › test_ca_01_ca_03_ca_05_login_navegacao_protegida_e_saida_com_cookies_httponly (5.5s)\r\n  ok  2 tests\\e2e\\auth.spec.ts:44:1 › test_ca_02_ca_06_validacao_e_recusa_visiveis_sem_criar_sessao (1.6s)\r\n  ok  3 tests\\e2e\\auth.spec.ts:59:1 › test_ca_06_responsividade_sem_overflow_e_envios_simultaneos_bloqueados (1.8s)\r\n  ok  4 tests\\e2e\\auth.spec.ts:74:1 › test_ca_04_cookie_expirado_e_renovado_no_proxy_sem_perder_autenticacao (1.1s)\r\n  ok  5 tests\\e2e\\auth.spec.ts:88:1 › test_ca_07_mutacao_de_outra_origem_e_input_de_outro_usuario_sao_recusados (1.1s)\r\n  ok  6 tests\\e2e\\auth.spec.ts:100:1 › test_ca_03_ca_04_provedor_indisponivel_nao_libera_pagina_protegida (1.0s)\r\n(node:20068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\r\n(Use `node --trace-warnings ...` to show where the warning was created)\r\n  ok  7 tests\\e2e\\dados-iniciais.spec.ts:27:5 › test_ca_03_ca_04_cli_aplica_lote_e_retorna_resumo_sem_identidades (932ms)\r\n  ok  8 tests\\e2e\\dados-iniciais.spec.ts:42:5 › test_ca_04_cli_recusa_uuids_iguais_e_argumento_de_senha (1.4s)\r\n  ok  9 tests\\e2e\\dados-iniciais.spec.ts:52:5 › test_ca_06_cli_exige_execucao_humana_explicita_e_recusa_outro_projeto (1.9s)\r\n  ok 10 tests\\e2e\\imagens.spec.ts:11:5 › test_ca_01_ca_05_cli_sem_chave_falha_sem_api_ou_env_do_supabase (842ms)\r\n  ok 11 tests\\e2e\\imagens.spec.ts:22:5 › test_ca_03_cli_bloqueia_export_sem_revisao_e_nao_cria_pacote (355ms)\r\n  ok 12 tests\\e2e\\imagens.spec.ts:30:5 › test_ca_05_cli_nao_oferece_upload_de_producao (395ms)\r\n  ok 13 tests\\e2e\\imagens.spec.ts:36:5 › test_ca_03_ca_04_cli_bloqueia_lote_incompleto_sem_fabricar_fotos (398ms)\r\n  ok 14 tests\\e2e\\verificador.spec.ts:34:5 › test_ca_01_ca_03_launcher_real_rejeita_checks_de_outro_commit (1.7s)\r\n  ok 15 tests\\e2e\\verificador.spec.ts:42:5 › test_ca_02_launcher_real_rejeita_env_versionado_sem_imprimir_valores (1.9s)\r\n  ok 16 tests\\e2e\\verificador.spec.ts:51:5 › test_ca_02_launcher_real_rejeita_symlink_antes_de_extrair_snapshot (2.3s)\r\n\r\n  16 passed (43.7s)"
+    },
+    {
+      "command": "npm audit --omit=dev",
+      "exitCode": 0,
+      "output": "found 0 vulnerabilities"
+    },
+    {
+      "command": "Executar a CLI duas vezes com o lote real em PostgreSQL descartável local",
+      "exitCode": 0,
+      "output": "(node:22444) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/isaac/OneDrive%20-%20Instituto%20J&F/%C3%81rea%20de%20Trabalho/3ANO/Inova%C3%A7%C3%A3o%20e%20Tecnologia/Grilo/Emprest-TI/tests/helpers/postgres.ts is not specified and it doesn't parse as CommonJS.\r\nReparsing as ES module because module syntax was detected. This incurs a performance overhead.\r\nTo eliminate this warning, add \"type\": \"module\" to C:\\Users\\isaac\\OneDrive - Instituto J&F\\Área de Trabalho\\3ANO\\Inovação e Tecnologia\\Grilo\\Emprest-TI\\package.json.\r\n(Use `node --trace-warnings ...` to show where the warning was created)\r\n{\r\n  \"database\": \"PostgreSQL descartável local\",\r\n  \"counts\": {\r\n    \"tenants\": 1,\r\n    \"equipment\": 12,\r\n    \"memberships\": 2\r\n  },\r\n  \"maintenance\": [\r\n    \"TI-0004\",\r\n    \"TI-0007\",\r\n    \"TI-0010\"\r\n  ],\r\n  \"reports\": [\r\n    {\r\n      \"tenant\": \"suporte_ti\",\r\n      \"equipamentos\": {\r\n        \"criados\": [\r\n          \"TI-0001\",\r\n          \"TI-0002\",\r\n          \"TI-0003\",\r\n          \"TI-0004\",\r\n          \"TI-0005\",\r\n          \"TI-0006\",\r\n          \"TI-0007\",\r\n          \"TI-0008\",\r\n          \"TI-0009\",\r\n          \"TI-0010\",\r\n          \"TI-0011\",\r\n          \"TI-0012\"\r\n        ],\r\n        \"sincronizados\": [],\r\n        \"preservados\": []\r\n      },\r\n      \"vinculosColaborador\": 2,\r\n      \"emprestimosCriados\": 0\r\n    },\r\n    {\r\n      \"tenant\": \"suporte_ti\",\r\n      \"equipamentos\": {\r\n        \"criados\": [],\r\n        \"sincronizados\": [\r\n          \"TI-0001\",\r\n          \"TI-0002\",\r\n          \"TI-0003\",\r\n          \"TI-0004\",\r\n          \"TI-0005\",\r\n          \"TI-0006\",\r\n          \"TI-0007\",\r\n          \"TI-0008\",\r\n          \"TI-0009\",\r\n          \"TI-0010\",\r\n          \"TI-0011\",\r\n          \"TI-0012\"\r\n        ],\r\n        \"preservados\": []\r\n      },\r\n      \"vinculosColaborador\": 2,\r\n      \"emprestimosCriados\": 0\r\n    }\r\n  ]\r\n}"
+    },
+    {
+      "command": "Conferir credenciais em fontes e bundles",
+      "exitCode": 0,
+      "output": "{\"sourceFilesScanned\":164,\"browserBundlesScanned\":25,\"configuredSecretValuesChecked\":2,\"credentialMatches\":[]}"
+    },
+    {
+      "command": "Conferir os 12 JPEG por GET público sem autenticação, separadamente dos testes",
+      "exitCode": 0,
+      "output": "[\n  {\n    \"item\": \"TI-0001\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0002\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0003\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0004\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0005\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0006\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0007\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0008\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0009\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0010\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0011\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  },\n  {\n    \"item\": \"TI-0012\",\n    \"status\": 200,\n    \"jpeg\": true,\n    \"shaMatch\": true\n  }\n]"
+    }
+  ],
+  "earlierBuild": {
+    "revision": "59056fd93d7473e42e50ecf296a0162ed9f1cc8e",
+    "exitCode": 1,
+    "output": "> emprest-ti@0.1.0 build\r\n> prisma generate && node ./node_modules/next/dist/bin/next build --webpack\r\n\r\nO sistema não pode encontrar o caminho especificado.\r\nnode:internal/modules/cjs/loader:1433\r\n  throw err;\r\n  ^\r\n\r\nError: Cannot find module 'C:\\Users\\isaac\\prisma\\build\\index.js'\r\n    at Function._resolveFilename (node:internal/modules/cjs/loader:1430:15)\r\n    at defaultResolveImpl (node:internal/modules/cjs/loader:1040:19)\r\n    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1045:22)\r\n    at Function._load (node:internal/modules/cjs/loader:1216:25)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)\r\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)\r\n    at node:internal/main/run_main_module:36:49 {\r\n  code: 'MODULE_NOT_FOUND',\r\n  requireStack: []\r\n}\r\n\r\nNode.js v22.22.3",
+    "resolution": "O launcher .cmd do Prisma falhou no caminho Windows com &. A revisão final chama a entrada JavaScript com Node."
+  },
+  "earlierChecks": [
+    {
+      "command": "npm run lint",
+      "exitCode": 1,
+      "output": "✖ 5301 problems (388 errors, 4913 warnings)\r\n  0 errors and 40 warnings potentially fixable with the `--fix` option.",
+      "resolution": "A tentativa incluiu artefatos gerados preservados em .image-work. O lint da revisão final exclui esse diretório temporário."
+    },
+    {
+      "command": "npm audit --omit=dev",
+      "exitCode": 1,
+      "output": "# npm audit report\r\n\r\ndeepmerge-ts  <8.0.0\r\nSeverity: high\r\nDeepmergeTS has stack exhaustion when merging recursive object graphs - https://github.com/advisories/GHSA-ggr8-5vv4-36mx\r\nfix available via `npm audit fix --force`\r\nWill install prisma@7.10.1, which is a breaking change\r\nnode_modules/deepmerge-ts\r\n  @prisma/config  6.13.0-dev.1 - 7.10.0 || 8.1.0-dev.1 - 8.1.0-dev.4\r\n  Depends on vulnerable versions of deepmerge-ts\r\n  node_modules/@prisma/config\r\n    prisma  6.13.0-dev.1 - 7.10.0 || 8.0.0-rc.3 - 8.1.0-dev.4\r\n    Depends on vulnerable versions of @prisma/config\r\n    node_modules/prisma\r\n\r\n3 high severity vulnerabilities\r\n\r\nTo address all issues (including breaking changes), run:\r\n  npm audit fix --force",
+      "resolution": "Fixada a versão corrigida de deepmerge-ts na dependência indireta de @prisma/config."
+    }
+  ]
+}
