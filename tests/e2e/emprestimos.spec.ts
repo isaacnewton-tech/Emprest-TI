@@ -27,8 +27,20 @@ test("test_ca_01_ca_02_ca_03_ca_05_ca_06_ca_08_ca_09_ca_10_catalogo_confirmacao_
   await expect(page).toHaveURL(app.url + "/login");
   await page.getByLabel("E-mail").fill(fixtureEmail);
   await page.getByLabel("Senha", { exact: true }).fill(fixturePassword);
-  await page.getByRole("button", { name: "Entrar", exact: true }).click();
-  await expect(page).toHaveURL(app.url + "/catalogo");
+  const isCatalogQuery = (url: URL) => url.pathname.startsWith("/api/trpc/") &&
+    url.pathname.split("/").at(-1)?.split(",").includes("catalogo.listar") === true;
+  const catalogGate = Promise.withResolvers<void>();
+  await page.route(isCatalogQuery, async (route) => {
+    await catalogGate.promise;
+    await route.continue();
+  }, { times: 1 });
+  try {
+    await page.getByRole("button", { name: "Entrar", exact: true }).click();
+    await expect(page).toHaveURL(app.url + "/catalogo");
+    await expect(page.getByRole("status").filter({ hasText: "Carregando equipamentos…" })).toBeVisible();
+  } finally {
+    catalogGate.resolve();
+  }
   const grid = page.getByRole("list", { name: "Equipamentos" });
   await expect(grid.getByRole("listitem")).toHaveCount(12);
   await expect(grid.getByRole("img")).toHaveCount(12);
@@ -39,6 +51,22 @@ test("test_ca_01_ca_02_ca_03_ca_05_ca_06_ca_08_ca_09_ca_10_catalogo_confirmacao_
   await expect.poll(() => grid.getByRole("img").first().evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth === 800)).toBe(true);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth && document.documentElement.scrollHeight <= innerHeight)).toBe(true);
   await page.screenshot({ path: info.outputPath("catalogo-desktop.png") });
+
+  app.state.unavailable = true;
+  try {
+    const failure = page.waitForResponse((response) => isCatalogQuery(new URL(response.url())));
+    await page.getByRole("button", { name: "Cabo", exact: true }).click();
+    const response = await failure;
+    expect(response.status()).toBe(503);
+    expect((await response.json())[0].error.json.data.code).toBe("SERVICE_UNAVAILABLE");
+    await expect(page.getByRole("alert").filter({ hasText: "Não foi possível acessar sua conta agora." })).toBeVisible();
+  } finally {
+    app.state.unavailable = false;
+  }
+  await page.getByRole("button", { name: "Tentar novamente", exact: true }).click();
+  await expect(grid.getByRole("listitem")).toHaveCount(3);
+  await page.getByRole("button", { name: "Todos", exact: true }).click();
+  await expect(grid.getByRole("listitem")).toHaveCount(12);
 
   const requestLoan = (patrimonio: string) => context.request.post(app.url + "/api/trpc/emprestimos.solicitar", {
     headers: { origin: app.url }, data: { json: { patrimonio } },
@@ -60,12 +88,15 @@ test("test_ca_01_ca_02_ca_03_ca_05_ca_06_ca_08_ca_09_ca_10_catalogo_confirmacao_
   const dialog = page.getByRole("dialog", { name: "Confirmar empréstimo" });
   await expect(dialog).toBeVisible();
   await page.screenshot({ path: info.outputPath("confirmacao-desktop.png") });
-  const mutation = page.waitForResponse((response) => response.url().includes("/api/trpc/emprestimos.solicitar"));
-  await dialog.getByRole("button", { name: "Confirmar empréstimo" }).click();
-  const accepted = await mutation;
-  expect(accepted.status()).toBe(200);
-  expect((await accepted.json())[0].result.data.json).toMatchObject({ patrimonio: "TI-0001", dueAt: expect.any(String) });
-  await expect(page).toHaveURL(app.url + "/meus-emprestimos");
+  const confirmLoan = async (patrimonio: string) => {
+    const mutation = page.waitForResponse((response) => response.url().includes("/api/trpc/emprestimos.solicitar"));
+    await dialog.getByRole("button", { name: "Confirmar empréstimo" }).click();
+    const accepted = await mutation;
+    expect(accepted.status()).toBe(200);
+    expect((await accepted.json())[0].result.data.json).toMatchObject({ patrimonio, dueAt: expect.any(String) });
+    await expect(page).toHaveURL(app.url + "/meus-emprestimos");
+  };
+  await confirmLoan("TI-0001");
   const loan = await prisma.loan.findFirstOrThrow({ where: { userId: fixtureUserId } });
   await expect(page.getByText("Notebook 14 polegadas")).toBeVisible();
   await expect(page.locator("time")).toHaveAttribute("datetime", loan.dueAt.toISOString());
@@ -97,8 +128,19 @@ test("test_ca_01_ca_02_ca_03_ca_05_ca_06_ca_08_ca_09_ca_10_catalogo_confirmacao_
   await dialog.getByRole("button", { name: "Cancelar" }).click();
   await prisma.equipment.update({ where: { id: staleItem.id }, data: { situacao: "disponivel" } });
 
+  await page.getByRole("link", { name: "Catálogo", exact: true }).click();
+  await page.getByRole("link", { name: "Ver detalhes de TI-0003", exact: true }).click();
+  await expect(requestButton).toBeEnabled();
+  await requestButton.click();
+  await expect(dialog).toBeInViewport({ ratio: 1 });
+  await page.screenshot({ path: info.outputPath("confirmacao-mobile.png") });
+  await confirmLoan("TI-0003");
+  const openLoans = page.getByRole("list", { name: "Empréstimos em aberto" });
+  await expect(openLoans.getByRole("listitem")).toHaveCount(2);
+  await expect(openLoans.getByText("Notebook 13 polegadas")).toBeVisible();
+
   const extra = await prisma.equipment.findMany({
-    where: { tenantId: loan.tenantId, situacao: "disponivel", patrimonio: { not: "TI-0012" } }, take: 4, orderBy: { patrimonio: "asc" },
+    where: { tenantId: loan.tenantId, situacao: "disponivel", patrimonio: { not: "TI-0012" } }, take: 3, orderBy: { patrimonio: "asc" },
   });
   const now = Date.now();
   await prisma.loan.createMany({ data: extra.map((item) => ({
@@ -112,9 +154,10 @@ test("test_ca_01_ca_02_ca_03_ca_05_ca_06_ca_08_ca_09_ca_10_catalogo_confirmacao_
   const tooMany = await requestLoan("TI-0012");
   expect(tooMany.status()).toBe(412);
   expect((await tooMany.json()).error.json).toMatchObject({ message: expect.stringContaining("limite de 5"), data: { code: "PRECONDITION_FAILED" } });
+  const overdueAt = new Date(now - 60_000);
   await prisma.loan.updateMany({
     where: { tenantId: loan.tenantId, userId: fixtureUserId, equipmentId: extra[0].id },
-    data: { dueAt: new Date(now - 60_000) },
+    data: { dueAt: overdueAt },
   });
   await page.reload();
   await expect(page.getByText("Você tem um empréstimo em atraso.")).toBeVisible();
@@ -123,4 +166,9 @@ test("test_ca_01_ca_02_ca_03_ca_05_ca_06_ca_08_ca_09_ca_10_catalogo_confirmacao_
   expect(late.status()).toBe(412);
   expect((await late.json()).error.json).toMatchObject({ message: expect.stringContaining("atraso"), data: { code: "PRECONDITION_FAILED" } });
   expect(await prisma.loan.count({ where: { userId: fixtureUserId } })).toBe(5);
+  await page.getByRole("link", { name: "Meus empréstimos", exact: true }).click();
+  const overdue = openLoans.getByRole("listitem").filter({ hasText: extra[0].patrimonio });
+  await expect(overdue.getByText("Em atraso", { exact: true })).toBeVisible();
+  await expect(overdue.locator("time")).toHaveAttribute("datetime", overdueAt.toISOString());
+  await page.screenshot({ path: info.outputPath("atraso-mobile.png") });
 });
