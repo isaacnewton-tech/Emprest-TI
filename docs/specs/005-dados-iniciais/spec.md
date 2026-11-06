@@ -2,7 +2,7 @@
 
 ## Estado
 
-Plano aprovado pelo usuário em 05/11/2026 para a entrega 3. A implementação segue o login da spec 002; a publicação depende do conjunto completo de fotos da spec 004. Esta spec não declara dados publicados ou contas provisionadas.
+Plano aprovado pelo usuário em 05/11/2026 para a entrega 3. A implementação segue o login da spec 002. O usuário publicou o conjunto de fotos da spec 004. Os 12 objetos foram conferidos por URL pública e hash. A aplicação da migração e do seed no deploy fica com o responsável pelo projeto.
 
 ## Fontes e decisões confirmadas
 
@@ -49,4 +49,4 @@ Playwright verifica a CLI em banco local e os erros de entrada. O catálogo e o 
 
 ## Fora de escopo
 
-Catálogo visual, cadastro por interface, solicitação ou devolução de empréstimos, alteração de senhas existentes, importação de planilha, publicação pelo agente e considerar as cinco fotos já revisadas como um lote completo.
+Catálogo visual, cadastro por interface, solicitação ou devolução de empréstimos, alteração de senhas existentes, importação de planilha e publicação pelo agente.
