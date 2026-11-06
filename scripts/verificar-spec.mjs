@@ -110,7 +110,7 @@ export function sourcePacket(snapshot, files, selected = files) {
     sources.push(`ARQUIVO: ${file}\n${content.toString("utf8").split(/\r?\n/).map((line, index) => `${index + 1}: ${line}`).join("\n")}\nFIM DO ARQUIVO: ${file}`);
   }
   const packet = `Inventário completo do snapshot (lockfile, binários e arquivos fora do escopo textual identificados por hash):\n${inventory.join("\n")}\n\n${sources.join("\n\n")}`;
-  if (packet.length > 300000) throw new Error("Pacote de fontes excede o limite. Reduza explicitamente o escopo; não truncar evidências.");
+  if (packet.length > 400000) throw new Error("Pacote de fontes excede o limite. Reduza explicitamente o escopo; não truncar evidências.");
   return packet;
 }
 

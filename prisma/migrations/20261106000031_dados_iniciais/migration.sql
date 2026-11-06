@@ -82,6 +82,8 @@ USING (
 
 REVOKE ALL ON TABLE public.tenants, public.memberships, public.equipment FROM PUBLIC;
 DO $$
+DECLARE
+  gateway_role name;
 BEGIN
   IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
     REVOKE ALL ON TABLE public.tenants, public.memberships, public.equipment FROM anon;
@@ -89,6 +91,18 @@ BEGIN
   IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN
     REVOKE ALL ON TABLE public.tenants, public.memberships, public.equipment FROM authenticated;
     GRANT SELECT ON TABLE public.tenants, public.memberships, public.equipment TO authenticated;
+  END IF;
+
+  -- Prisma cria esta tabela antes do DDL. Ela pode herdar grants em projetos antigos.
+  IF to_regclass('public._prisma_migrations') IS NOT NULL THEN
+    ALTER TABLE public._prisma_migrations ENABLE ROW LEVEL SECURITY;
+    CREATE POLICY prisma_migrations_private ON public._prisma_migrations
+      AS RESTRICTIVE FOR ALL USING (false) WITH CHECK (false);
+    REVOKE ALL ON TABLE public._prisma_migrations FROM PUBLIC;
+    FOR gateway_role IN SELECT rolname FROM pg_roles WHERE rolname IN ('anon', 'authenticated', 'service_role')
+    LOOP
+      EXECUTE format('REVOKE ALL ON TABLE public._prisma_migrations FROM %I', gateway_role);
+    END LOOP;
   END IF;
 END;
 $$;

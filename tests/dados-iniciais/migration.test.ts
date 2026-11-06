@@ -50,4 +50,9 @@ test("test_ca_05_nega_leitura_anonima_e_escrita_autenticada_mesmo_com_grants_pad
   `;
   expect(access).toHaveLength(3);
   expect(access.every(({ anon_read, user_write }) => !anon_read && !user_write)).toBe(true);
+  const [historyAccess] = await database.prisma.$queryRaw<{ anon_read: boolean; user_read: boolean }[]>`
+    SELECT has_table_privilege('anon', 'public._prisma_migrations', 'SELECT') AS anon_read,
+      has_table_privilege('authenticated', 'public._prisma_migrations', 'SELECT') AS user_read
+  `;
+  expect(historyAccess).toEqual({ anon_read: false, user_read: false });
 });

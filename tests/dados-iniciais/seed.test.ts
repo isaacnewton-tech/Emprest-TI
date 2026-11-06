@@ -70,6 +70,7 @@ test("test_ca_01_ca_02_ca_03_ca_04_seed_exato_idempotente_e_preserva_itens_usado
 test("test_ca_03_lote_incompleto_origem_errada_e_hash_invalido_falham_antes_de_escrever", async () => {
   const { prisma } = database;
   const before = await prisma.membership.count();
+  const equipmentBefore = await prisma.equipment.findMany({ orderBy: { id: "asc" } });
   const { input, manifest, writeManifest } = await makeSeedFixture();
   const otherInput = { ...input, professorId: "20000000-0000-4000-8000-000000000001" };
   const missing = manifest.images.pop()!;
@@ -94,6 +95,7 @@ test("test_ca_03_lote_incompleto_origem_errada_e_hash_invalido_falham_antes_de_e
   await expect(seedInitialData(prisma, otherInput)).rejects.toThrow("JPEG 800×600");
   expect(await prisma.membership.count()).toBe(before);
   expect(await prisma.membership.count({ where: { userId: otherInput.professorId } })).toBe(0);
+  expect(await prisma.equipment.findMany({ orderBy: { id: "asc" } })).toEqual(equipmentBefore);
 });
 
 test("test_ca_04_vinculo_com_papel_incompativel_cancela_seed_sem_mudar_permissoes", async () => {
