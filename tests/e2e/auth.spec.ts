@@ -1,9 +1,10 @@
 import { test as base, expect, type Page } from "@playwright/test";
-import { startAuthHarness } from "../helpers/auth-harness";
+import type { startAuthHarness } from "../helpers/auth-harness";
+import { startLoanHarness } from "../helpers/loan-harness";
 import { fixtureEmail, fixturePassword, fixtureUserId } from "../helpers/auth-provider";
 
 const test = base.extend<Record<never, never>, { app: Awaited<ReturnType<typeof startAuthHarness>> }>({
-  app: [async ({}, provide) => { const app = await startAuthHarness(); try { await provide(app); } finally { await app.close(); } }, { scope: "worker" }],
+  app: [async ({}, provide) => { const harness = await startLoanHarness(); try { await provide(harness.app); } finally { await harness.close(); } }, { scope: "worker", timeout: 180_000 }],
 });
 test.beforeEach(({ app }) => app.reset());
 async function login(page: Page, url: string, logs?: () => string) {
@@ -18,7 +19,7 @@ async function login(page: Page, url: string, logs?: () => string) {
   expect(response.status(), JSON.stringify({ body, origin: headers.origin, site: headers["sec-fetch-site"], host: headers.host, server: logs?.() })).toBe(200);
   expect(body).toEqual([{ result: { data: { json: { user: { id: fixtureUserId, email: fixtureEmail } } } } }]);
   await expect(page).toHaveURL(`${url}/catalogo`);
-  await expect(page.getByRole("heading", { name: "Você está conectado." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Catálogo", exact: true })).toBeVisible();
 }
 
 test("test_ca_01_ca_03_ca_05_login_navegacao_protegida_e_saida_com_cookies_httponly", async ({ page, context, app }) => {
@@ -73,6 +74,7 @@ test("test_ca_06_responsividade_sem_overflow_e_envios_simultaneos_bloqueados", a
 
 test("test_ca_04_cookie_expirado_e_renovado_no_proxy_sem_perder_autenticacao", async ({ page, context, app }) => {
   await login(page, app.url);
+  await page.goto("about:blank");
   const cookie = (await context.cookies()).find((entry) => entry.name === "empresti-auth");
   if (!cookie) throw new Error("Cookie da fixture não encontrado.");
   const session = JSON.parse(Buffer.from(cookie.value.slice(7), "base64url").toString());
@@ -80,7 +82,7 @@ test("test_ca_04_cookie_expirado_e_renovado_no_proxy_sem_perder_autenticacao", a
   const expired = `base64-${Buffer.from(JSON.stringify(session)).toString("base64url")}`;
   await context.addCookies([{ ...cookie, value: expired }]);
   await page.goto(`${app.url}/catalogo`);
-  await expect(page.getByRole("heading", { name: "Você está conectado." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Catálogo", exact: true })).toBeVisible();
   expect(app.state.refreshRequests).toBe(1);
   expect((await context.cookies()).find((entry) => entry.name === "empresti-auth")?.value).not.toBe(expired);
 });
@@ -105,5 +107,5 @@ test("test_ca_03_ca_04_provedor_indisponivel_nao_libera_pagina_protegida", async
   await expect(page.getByText("Não foi possível verificar sua sessão agora. Tente novamente.", { exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Tentar novamente" })).toHaveAttribute("href", "/catalogo");
   expect(await page.locator("body").evaluate((body) => getComputedStyle(body).backgroundColor)).toBe("rgb(5, 7, 15)");
-  await expect(page.getByRole("heading", { name: "Você está conectado." })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Catálogo", exact: true })).toHaveCount(0);
 });

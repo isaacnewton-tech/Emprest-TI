@@ -9,6 +9,7 @@ export const catalogoRouter = router({
     categoria: equipmentCategory.optional(),
     disponiveis: z.boolean().optional(),
     cursor: equipmentPatrimonio.nullish(),
+    direction: z.literal("forward").optional(),
   })).query(({ ctx, input }) => listEquipment(ctx.db, ctx.tenantId, input)),
   detalhe: tenantProcedure.input(z.strictObject({ patrimonio: equipmentPatrimonio })).query(async ({ ctx, input }) => {
     const item = await getEquipment(ctx.db, ctx.tenantId, input.patrimonio);

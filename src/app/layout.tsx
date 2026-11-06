@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { TRPCProvider } from "@/trpc/react";
 
 import "./globals.css";
+import "./loans.css";
 
 export const metadata: Metadata = {
   title: "EmpresTI",

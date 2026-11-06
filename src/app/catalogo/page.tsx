@@ -1,5 +1,5 @@
-import { AuthenticatedArea } from "@/components/authenticated-area";
+import { CatalogScreen } from "@/components/catalogo-screen";
 
 export default function CatalogPage() {
-  return <AuthenticatedArea />;
+  return <CatalogScreen />;
 }

@@ -2,6 +2,7 @@ import { createServer, type Server } from "node:http";
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { fixtureEmail, fixturePassword, fixtureSession, fixtureUser } from "./auth-provider";
+import { localDatabaseUrl } from "./postgres";
 
 async function listen(server: Server) {
   await new Promise<void>((resolve, reject) => { server.once("error", reject); server.listen(0, "127.0.0.1", resolve); });
@@ -10,7 +11,8 @@ async function listen(server: Server) {
   return address.port;
 }
 
-export async function startAuthHarness() {
+export async function startAuthHarness(databaseUrl: string) {
+  const connection = localDatabaseUrl(databaseUrl);
   const state = { unavailable: false, delay: 0, passwordRequests: 0, refreshRequests: 0, logoutRequests: 0 };
   const tokens = new Map<string, ReturnType<typeof fixtureUser>>();
   const refreshTokens = new Set<string>();
@@ -58,7 +60,7 @@ export async function startAuthHarness() {
   const url = `http://127.0.0.1:${appPort}`;
   const child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "--hostname", "127.0.0.1", "--port", String(appPort)], {
     windowsHide: true, stdio: ["ignore", "pipe", "pipe"],
-    env: { ...process.env, NODE_ENV: "production", NEXT_TELEMETRY_DISABLED: "1", NEXT_PUBLIC_SUPABASE_URL: `http://127.0.0.1:${providerPort}`, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "publica-da-fixture-e2e", SUPABASE_SERVICE_ROLE_KEY: "", DATABASE_URL: "postgresql://fixture:fixture@127.0.0.1:1/fixture", DIRECT_URL: "postgresql://fixture:fixture@127.0.0.1:1/fixture", SENTRY_DSN: "" },
+    env: { ...process.env, NODE_ENV: "production", NEXT_TELEMETRY_DISABLED: "1", NEXT_PUBLIC_SUPABASE_URL: `http://127.0.0.1:${providerPort}`, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "publica-da-fixture-e2e", SUPABASE_SERVICE_ROLE_KEY: "", DATABASE_URL: connection, DIRECT_URL: connection, SENTRY_DSN: "" },
   });
   let output = "";
   let spawnFailure: Error | undefined;
