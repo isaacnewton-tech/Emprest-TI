@@ -50,15 +50,16 @@ test("test_ca_01_ca_09_catalogo_lista_itens_do_tenant_e_filtra_disponibilidade",
   await expect(a.catalogo.detalhe({ patrimonio: "TI-0099" })).rejects.toMatchObject({ code: "NOT_FOUND" });
 });
 
-test("test_ca_08_ca_09_meus_abertos_esconde_emprestimo_de_outra_pessoa_e_tenant", async () => {
+test("test_ca_08_ca_09_meus_abertos_indica_atraso_e_esconde_emprestimo_de_outra_pessoa_e_tenant", async () => {
   const [openItem, closedItem] = await db.prisma.equipment.findMany({ where: { tenantId: tenantA }, take: 2 });
-  const createdAt = new Date("2026-10-01T15:00:00Z");
-  const dueAt = new Date("2026-10-20T02:59:00Z");
+  const now = Date.now();
+  const createdAt = new Date(now - 86_400_000);
+  const dueAt = new Date(now - 60_000);
   const record = { tenantId: tenantA, userId: testerId, createdAt, dueAt };
   const open = await db.prisma.loan.create({ data: { ...record, equipmentId: openItem.id } });
   await db.prisma.loan.create({ data: { ...record, equipmentId: closedItem.id, returnedAt: dueAt } });
   expect(await caller(testerId).emprestimos.meusAbertos({})).toMatchObject({
-    limite: 5, itens: [{ id: open.id, dueAt, equipment: { nome: openItem.nome } }],
+    limite: 5, itens: [{ id: open.id, dueAt, emAtraso: true, equipment: { nome: openItem.nome } }],
   });
   expect((await caller(professorId).emprestimos.meusAbertos({})).itens).toEqual([]);
   expect((await caller(outsider).emprestimos.meusAbertos({})).itens).toEqual([]);
