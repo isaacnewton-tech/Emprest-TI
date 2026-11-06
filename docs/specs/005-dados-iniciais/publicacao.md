@@ -25,11 +25,11 @@ Use Node.js 22 e execute na raiz do repositório. Antes de aplicar a migração,
 
 ~~~powershell
 npm ci
-npx prisma generate
-npx prisma migrate deploy
+npm run db:generate
+npm run db:migrate
 ~~~
 
-Continue após o comando migrate deploy concluir com sucesso. [Aplicação de migrações em produção no Prisma](https://www.prisma.io/docs/orm/v6/prisma-migrate/workflows/development-and-production)
+Continue após db:migrate concluir com sucesso. Esse script executa Prisma Migrate Deploy. [Aplicação de migrações em produção no Prisma](https://www.prisma.io/docs/orm/v6/prisma-migrate/workflows/development-and-production)
 
 ~~~powershell
 $professorUid = Read-Host 'User UID do professor no Supabase Auth'
@@ -43,7 +43,7 @@ Ajuste --pacote se extraiu o ZIP em outra pasta. A primeira execução em banco 
 
 1. No **Table Editor** do Supabase, confirme o tenant suporte_ti em tenants e os 12 registros correspondentes em equipment. TI-0004, TI-0007 e TI-0010 devem começar em manutenção. Os outros nove devem começar disponíveis.
 2. Em memberships, confira os dois UIDs e o papel colaborador no mesmo tenant.
-3. Abra o endereço de produção pelo painel **Deployments** da Vercel. Em janela anônima, teste o login do professor e confirme que chega à área autenticada. Depois, faça os testes manuais de empréstimo com a sua conta.
+3. Com a revisão que inclui o login publicada, abra o endereço de produção pelo painel **Deployments** da Vercel. Em janela anônima, teste o login do professor e confirme que chega à área autenticada. Depois, faça os testes manuais de empréstimo com a sua conta.
 4. O seed cria zero empréstimos. Quando a entrega 4 habilitar **Meus empréstimos**, confirme na conta do professor que a lista está vazia. Até lá, a área autenticada informa que o catálogo está em preparação.
 
 Para repetir a carga, execute o mesmo comando com os mesmos UIDs e o pacote validado. O seed preserva os campos de equipamentos com first_used_at preenchido.
