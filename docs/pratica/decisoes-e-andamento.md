@@ -47,13 +47,13 @@ Concluída para a revisão `29f8b1c8dd9ed95df3adb09466c8ab6ac3891e73`. O relató
 - A chave do Pixabay foi fornecida pelo usuário. Ela fica em `.local-secrets/pixabay.key`, ignorada pelo Git. É credencial apenas do preparador local de imagens, não variável da aplicação ou do deploy. O preparador não lê o .env do Supabase nem recebe credenciais de upload.
 - O usuário enviou as 12 fotos ao bucket público e criou a conta do professor. A pedido dele, o agente aplicou a migração inicial e o seed no Supabase em 05/11/2026. O usuário confirmou com uma captura que o login do professor funcionou no deploy.
 - Manter a conta do professor com zero empréstimos; usar outra conta nos testes.
-- Os planos de login (002) e dados iniciais (005) foram aprovados pelo usuário em 05/11/2026. O plano da entrega 4 está em `docs/specs/006-solicitar-emprestimo/plan.md`, aguardando aprovação.
+- Os planos de login (002), dados iniciais (005) e solicitação de empréstimo (006) foram aprovados pelo usuário. A aplicação da migração da entrega 4 e o deploy seguem o roteiro em `docs/specs/006-solicitar-emprestimo/publicacao.md`.
 
 ## Estado das demais entregas
 
 - Entrega 2 concluída para a revisão `09bf0ed37c46a071a5e09770f20d2dbcb77e762c`. O verificador marcou CA-01 a CA-05 como ATENDIDO e examinou os 12 JPEG finais. O pacote `entregas/02-imagens-equipamentos.zip` tem cinco fotos integrais, sete recortes e um manifesto com 55 recusas preservadas. Passaram 48 testes Vitest, 13 Playwright, lint e build. O usuário enviou os 12 arquivos ao bucket público `equipamentos`. Cada URL respondeu com o mesmo SHA-256 do pacote aprovado. O relatório está em `docs/verificacoes/004-imagens-equipamentos/2026-11-05T23-15-45.597Z-09bf0ed3.md`.
 - Entrega 3 aplicada no Supabase. O verificador marcou CA-01 a CA-06 como ATENDIDO na revisão `b99a17d28281d7eda622e587449385708fe3def9`. Passaram 53 testes Vitest, 16 Playwright, lint e build. Em produção, o seed criou os 12 equipamentos em `suporte_ti` e vinculou o professor e a conta de teste como Colaborador. A leitura de conferência confirmou os dados e os três itens em manutenção, TI-0004, TI-0007 e TI-0010. O seed criou zero empréstimos.
-- Entrega 4: spec, plano e tarefas em `docs/specs/006-solicitar-emprestimo/`. O plano cobre catálogo, empréstimo imediato e Meus empréstimos.
+- Entrega 4: catálogo, confirmação de empréstimo imediato e Meus empréstimos exercitados em navegador e PostgreSQL descartável. Auditoria independente e publicação pendentes.
 - Entrega 5: ENTREGA.md deve refletir decisões e evidências reais, sem preencher resultados futuros.
 - Pré-requisito adicional: login implementado e PRONTO na revisão `89f6c0f898e44cf617218fb2d385341efc565920`, com 45 testes, 13 E2E, lint, build e auditoria independente. O login da conta do professor foi confirmado pelo usuário no deploy.
 
