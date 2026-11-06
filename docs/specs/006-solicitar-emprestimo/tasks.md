@@ -9,7 +9,7 @@ Executar em ordem após aprovação do plano. Cada tarefa tem um commit próprio
 | E03 | Implementar calendário de São Paulo e cálculo de prazo. Provar as três abrangências de feriado, datas móveis, virada de ano e o limite entre no prazo e em atraso. | CA-04, CA-06 | Sete testes de calendário passaram (`2cf57d5`) |
 | E04 | Criar a mutação transacional, registrar o primeiro uso e auditoria e provar recusas e concorrência com PostgreSQL real. | CA-02 a CA-07, CA-09 | Validada em PostgreSQL local (`459bf6c`, `1028d1a`) |
 | E05 | Conectar Catálogo, Detalhe, confirmação e Meus empréstimos, com fotos, crédito, estados e erros acessíveis. Verificar a jornada em desktop e mobile com Playwright local. | CA-01 a CA-10 | Jornada e login validados em Playwright (`5e8e5da`, `1b2985f`) |
-| E06 | Rodar checks, obter a auditoria independente e preparar os passos de migração e conferência no deploy. | CA-01 a CA-10 | [Roteiro de publicação](publicacao.md) preparado. Aguardando veredito. |
+| E06 | Rodar checks, obter a auditoria independente e preparar os passos de migração e conferência no deploy. | CA-01 a CA-10 | PRONTA na revisão `d20eca3`. [Relatório](../../verificacoes/006-solicitar-emprestimo/2026-11-06T03-22-01.183Z-d20eca3c.md) e [roteiro de publicação](publicacao.md). |
 
 A primeira auditoria, da revisão `49dba04`, pediu provas adicionais para CA-03, CA-08 e CA-10. As tarefas E02, E04 e E05 voltaram para teste antes de repetir os checks e a auditoria na revisão nova.
 
