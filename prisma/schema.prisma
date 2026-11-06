@@ -23,6 +23,7 @@ enum EquipmentCategory {
 enum EquipmentStatus {
   disponivel
   manutencao
+  emprestado
 }
 
 model Tenant {
@@ -30,6 +31,7 @@ model Tenant {
   slug        String       @unique
   memberships Membership[]
   equipment   Equipment[]
+  auditEvents AuditEvent[]
 
   @@map("tenants")
 }
@@ -39,6 +41,7 @@ model Membership {
   tenantId String         @map("tenant_id") @db.Uuid
   role     MembershipRole
   tenant   Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  loans    Loan[]
 
   @@id([userId, tenantId])
   @@index([tenantId])
@@ -56,7 +59,37 @@ model Equipment {
   photoSource   Json              @map("photo_source")
   firstUsedAt   DateTime?         @map("first_used_at") @db.Timestamptz(3)
   tenant        Tenant            @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  loans         Loan[]
 
   @@unique([tenantId, patrimonio])
+  @@unique([tenantId, id])
   @@map("equipment")
+}
+
+model Loan {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String     @map("tenant_id") @db.Uuid
+  userId      String     @map("user_id") @db.Uuid
+  equipmentId String     @map("equipment_id") @db.Uuid
+  createdAt   DateTime   @map("created_at") @db.Timestamptz(3)
+  dueAt       DateTime   @map("due_at") @db.Timestamptz(3)
+  returnedAt  DateTime?  @map("returned_at") @db.Timestamptz(3)
+  borrower    Membership @relation(fields: [userId, tenantId], references: [userId, tenantId], onDelete: Restrict, onUpdate: Restrict)
+  equipment   Equipment  @relation(fields: [tenantId, equipmentId], references: [tenantId, id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([tenantId, userId, returnedAt, dueAt])
+  @@map("loans")
+}
+
+model AuditEvent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId   String   @map("tenant_id") @db.Uuid
+  actorId    String   @map("actor_id") @db.Uuid
+  action     String
+  resourceId String   @map("resource_id") @db.Uuid
+  createdAt  DateTime @map("created_at") @db.Timestamptz(3)
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([tenantId, createdAt])
+  @@map("audit_events")
 }

@@ -29,7 +29,17 @@ export function databaseEnv(connection: string) {
   };
 }
 
-export async function startTestDatabase({ gatewayRoles = false } = {}) {
+export function deployTestMigrations(connection: string, schemaFile?: string) {
+  const migrate = spawnSync(process.execPath, [
+    path.resolve("node_modules/prisma/build/index.js"), "migrate", "deploy",
+    ...(schemaFile ? ["--schema", schemaFile] : []),
+  ], { env: databaseEnv(connection), encoding: "utf8", timeout: 60_000, windowsHide: true });
+  if (migrate.status !== 0) {
+    throw new Error("Prisma Migrate falhou no PostgreSQL descartável.\n" + migrate.stdout + "\n" + migrate.stderr, { cause: migrate.error });
+  }
+}
+
+export async function startTestDatabase({ gatewayRoles = false, schemaFile }: { gatewayRoles?: boolean; schemaFile?: string } = {}) {
   const image = new PostgreSqlContainer("postgres:17-alpine")
     .withDatabase("empresti_teste")
     .withStartupTimeout(90_000);
@@ -39,12 +49,7 @@ export async function startTestDatabase({ gatewayRoles = false } = {}) {
   const container = await image.start();
   try {
     const url = localDatabaseUrl(container.getConnectionUri());
-    const migrate = spawnSync(process.execPath, [
-      path.resolve("node_modules/prisma/build/index.js"), "migrate", "deploy",
-    ], { env: databaseEnv(url), encoding: "utf8", timeout: 60_000, windowsHide: true });
-    if (migrate.status !== 0) {
-      throw new Error(`Prisma Migrate falhou no PostgreSQL descartável.\n${migrate.stdout}\n${migrate.stderr}`, { cause: migrate.error });
-    }
+    deployTestMigrations(url, schemaFile);
     const prisma = new PrismaClient({ datasourceUrl: url });
     return {
       prisma,

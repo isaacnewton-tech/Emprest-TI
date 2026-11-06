@@ -1,6 +1,6 @@
 # Plano — Solicitar empréstimo
 
-**Aguardando aprovação.** A spec 006 usa as decisões já registradas em `docs/pratica/decisoes-e-andamento.md`. O código começa após aprovação deste plano.
+**Aprovado pelo usuário.** A spec 006 usa as decisões já registradas em `docs/pratica/decisoes-e-andamento.md`.
 
 ## Contratos e arquitetura
 

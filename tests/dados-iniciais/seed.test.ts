@@ -39,10 +39,7 @@ test("test_ca_01_ca_02_ca_03_ca_04_seed_exato_idempotente_e_preserva_itens_usado
     { tenantId: rows[0].tenantId, userId: professorId, role: "colaborador" },
     { tenantId: rows[0].tenantId, userId: testerId, role: "colaborador" },
   ]);
-  const [{ total }] = await prisma.$queryRaw<{ total: number }[]>`
-    SELECT count(*)::int AS total FROM pg_tables WHERE schemaname = 'public' AND tablename LIKE '%loan%'
-  `;
-  expect(total).toBe(0);
+  expect(await prisma.loan.count()).toBe(0);
 
   const used = await prisma.equipment.update({
     where: { id: rows[0].id },
