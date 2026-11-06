@@ -44,7 +44,7 @@ test("test_ca_02_ca_03_ca_04_criacao_imediata_com_prazo_primeiro_uso_e_auditoria
   const item = s.items[0];
   const loan = await borrowEquipment(db.prisma, s.tenantId, s.users[0], item.patrimonio, () => now);
   expect(loan.dueAt.toISOString()).toBe("2026-11-27T02:59:00.000Z");
-  expect(await db.prisma.loan.findUnique({ where: { id: loan.id } })).toMatchObject({ userId: s.users[0], equipmentId: item.id, returnedAt: null });
+  expect(await db.prisma.loan.findUnique({ where: { id: loan.id } })).toMatchObject({ userId: s.users[0], equipmentId: item.id, dueAt: loan.dueAt, returnedAt: null });
   expect(await db.prisma.equipment.findUnique({ where: { id: item.id } })).toMatchObject({ situacao: "emprestado", firstUsedAt: now });
   expect(await db.prisma.auditEvent.findFirst({ where: { tenantId: s.tenantId } })).toMatchObject({
     actorId: s.users[0], action: "emprestimo.criado", resourceId: loan.id,
@@ -66,6 +66,34 @@ test("test_ca_03_indice_reverte_situacao_e_primeiro_uso_ao_falhar_insercao", asy
   expect(await db.prisma.equipment.findUnique({ where: { id: item.id } })).toMatchObject({ situacao: "disponivel", firstUsedAt: null });
   expect(await db.prisma.loan.count({ where: { tenantId: s.tenantId } })).toBe(1);
   expect(await db.prisma.auditEvent.count({ where: { tenantId: s.tenantId } })).toBe(0);
+});
+
+test("test_ca_03_falha_na_auditoria_reverte_emprestimo_situacao_e_primeiro_uso", async () => {
+  const s = await scenario();
+  const item = s.items[0];
+  // A restrição existe apenas no PostgreSQL descartável e força a falha da última escrita.
+  await db.prisma.$executeRaw`ALTER TABLE audit_events ADD CONSTRAINT test_ca_03_recusar_auditoria CHECK (action <> 'emprestimo.criado') NOT VALID`;
+  try {
+    await expect(caller(s.users[0]).emprestimos.solicitar({ patrimonio: item.patrimonio }))
+      .rejects.toMatchObject({ code: "INTERNAL_SERVER_ERROR", cause: { message: expect.stringContaining("test_ca_03_recusar_auditoria") } });
+    expect(await db.prisma.equipment.findUnique({ where: { id: item.id } })).toMatchObject({ situacao: "disponivel", firstUsedAt: null });
+    expect(await db.prisma.loan.count({ where: { tenantId: s.tenantId } })).toBe(0);
+    expect(await db.prisma.auditEvent.count({ where: { tenantId: s.tenantId } })).toBe(0);
+  } finally {
+    await db.prisma.$executeRaw`ALTER TABLE audit_events DROP CONSTRAINT test_ca_03_recusar_auditoria`;
+  }
+});
+
+test("test_ca_03_novo_emprestimo_preserva_primeiro_uso_ja_gravado", async () => {
+  const s = await scenario();
+  const item = s.items[0];
+  const firstUsedAt = new Date("2026-10-05T15:00:00Z");
+  await db.prisma.equipment.update({ where: { id: item.id }, data: { firstUsedAt } });
+
+  const loan = await caller(s.users[0]).emprestimos.solicitar({ patrimonio: item.patrimonio });
+
+  expect(await db.prisma.loan.findUnique({ where: { id: loan.id } })).toMatchObject({ equipmentId: item.id });
+  expect(await db.prisma.equipment.findUnique({ where: { id: item.id } })).toMatchObject({ situacao: "emprestado", firstUsedAt });
 });
 
 test("test_ca_05_ca_07_concorrencia_por_itens_distintos_respeita_o_quinto_e_recusa_o_sexto", async () => {
