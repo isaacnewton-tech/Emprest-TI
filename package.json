@@ -7,6 +7,7 @@
     "build": "prisma generate && node ./node_modules/next/dist/bin/next build",
     "start": "node ./node_modules/next/dist/bin/next start",
     "lint": "node ./node_modules/eslint/bin/eslint.js .",
+    "db:seed": "node --env-file-if-exists=.env prisma/seed.ts",
     "test": "node ./node_modules/vitest/vitest.mjs run",
     "test:e2e": "node ./node_modules/@playwright/test/cli.js test",
     "verify:spec": "node ./scripts/verificar-spec.mjs"
