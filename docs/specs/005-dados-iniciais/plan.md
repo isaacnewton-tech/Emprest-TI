@@ -8,7 +8,15 @@ Aprovado pelo usuário em 05/11/2026. Executar após o login da spec 002, uma ta
 
 Seguir ADR-001: Prisma Migrate, PostgreSQL, tenant discriminado por coluna, memberships e Supabase Auth. Não introduzir biblioteca fora da stack. Testcontainers exige Docker em execução; não substituir PostgreSQL por mocks nem executar testes no banco remoto.
 
-O login da spec 002 é pré-requisito para a aceitação em produção. A spec 004 já prepara e valida imagens, mas o lote real ainda tem sete fotos pendentes. Não criar dados definitivos com fotos de teste, links fictícios ou placeholder.
+O login da spec 002 é pré-requisito para a aceitação em produção. O lote da spec 004 foi concluído e auditado. Após o envio pelo usuário, a leitura pública dos 12 JPEG retornou HTTP 200 com SHA-256 idêntico ao manifesto.
+
+## DDL da primeira migração
+
+- `tenants`: identificador UUID e slug único. O seed cria `suporte_ti`.
+- `memberships`: par usuário UUID do Supabase Auth e tenant como chave primária, índice por tenant e papel do vínculo. O vínculo referencia o tenant local. A conferência da identidade do Auth é parte do procedimento de publicação.
+- `equipment`: UUID, FK de tenant, patrimônio único por tenant, nome, categoria, situação, URL pública, proveniência em JSON e data opcional do primeiro uso. Chaves estrangeiras restringem a remoção de um tenant que ainda tenha vínculos ou equipamentos.
+- RLS de leitura nas três tabelas. O papel `authenticated` vê os próprios vínculos e só lê tenants e equipamentos correspondentes. A política usa o `sub` da sessão encaminhada pelo gateway do Supabase. O papel `anon` não recebe acesso, e a escrita pelo gateway fica bloqueada. A migração também aplica em PostgreSQL vazio sem papéis do Supabase.
+- As três tabelas são novas. A migração não altera tabelas existentes, contas Auth ou objetos do Storage.
 
 ## Implementação proposta
 

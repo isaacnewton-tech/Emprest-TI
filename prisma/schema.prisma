@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum MembershipRole {
+  colaborador
+  operacoes
+}
+
+enum EquipmentCategory {
+  notebook
+  monitor
+  cabo
+  camera
+}
+
+enum EquipmentStatus {
+  disponivel
+  manutencao
+}
+
+model Tenant {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug        String       @unique
+  memberships Membership[]
+  equipment   Equipment[]
+
+  @@map("tenants")
+}
+
+model Membership {
+  userId   String         @map("user_id") @db.Uuid
+  tenantId String         @map("tenant_id") @db.Uuid
+  role     MembershipRole
+  tenant   Tenant         @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  @@id([userId, tenantId])
+  @@index([tenantId])
+  @@map("memberships")
+}
+
+model Equipment {
+  id            String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId      String            @map("tenant_id") @db.Uuid
+  patrimonio    String
+  nome          String
+  categoria     EquipmentCategory
+  situacao      EquipmentStatus
+  photoUrl      String            @map("photo_url")
+  photoSource   Json              @map("photo_source")
+  firstUsedAt   DateTime?         @map("first_used_at") @db.Timestamptz(3)
+  tenant        Tenant            @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  @@unique([tenantId, patrimonio])
+  @@map("equipment")
+}
