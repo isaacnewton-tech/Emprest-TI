@@ -1,5 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 import { MAX_OPEN_LOANS } from "@/shared/loans";
+import { isOverdue } from "./calendario";
 
 export async function listOpenLoans(db: PrismaClient, tenantId: string, userId: string, now = new Date()) {
   const rows = await db.loan.findMany({
@@ -11,7 +12,7 @@ export async function listOpenLoans(db: PrismaClient, tenantId: string, userId: 
     orderBy: [{ dueAt: "asc" }, { id: "asc" }],
   });
   return {
-    itens: rows.map((row) => ({ ...row, emAtraso: row.dueAt < now })),
+    itens: rows.map((row) => ({ ...row, emAtraso: isOverdue(row.dueAt, now) })),
     limite: MAX_OPEN_LOANS,
   };
 }

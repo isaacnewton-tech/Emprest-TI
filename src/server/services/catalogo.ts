@@ -1,4 +1,5 @@
 import type { Prisma, PrismaClient } from "@prisma/client";
+import { loanDeadline } from "./calendario";
 
 const equipmentFields = {
   patrimonio: true, nome: true, categoria: true, situacao: true, photoUrl: true,
@@ -25,9 +26,10 @@ export async function listEquipment(db: PrismaClient, tenantId: string, input: {
   return { itens, nextCursor: rows.length > pageSize ? itens.at(-1)?.patrimonio : undefined };
 }
 
-export function getEquipment(db: PrismaClient, tenantId: string, patrimonio: string) {
-  return db.equipment.findUnique({
+export async function getEquipment(db: PrismaClient, tenantId: string, patrimonio: string, now = new Date()) {
+  const item = await db.equipment.findUnique({
     where: { tenantId_patrimonio: { tenantId, patrimonio } },
     select: equipmentFields,
   });
+  return item && { ...item, devolucaoPrevista: item.situacao === "disponivel" ? loanDeadline(now) : null };
 }
